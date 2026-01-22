@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Administration Study Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .controls select, .controls button {
+            padding: 10px 20px;
+            border: 2px solid #3498db;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .controls select {
+            background: white;
+        }
+        
+        .controls button {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .controls button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .summary {
+            padding: 20px 30px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            margin: 20px 30px;
+            border-radius: 6px;
+        }
+        
+        .summary h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .summary-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #ffc107;
+        }
+        
+        .summary-item strong {
+            display: block;
+            color: #856404;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            padding: 0 30px 30px 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .module-sharepoint { background: #e3f2fd; border-left: 4px solid #2196F3; }
+        .module-netskope { background: #f3e5f5; border-left: 4px solid #9c27b0; }
+        .module-exchange { background: #e8f5e9; border-left: 4px solid #4caf50; }
+        .module-azure { background: #fff3e0; border-left: 4px solid #ff9800; }
+        
+        .day-weekend {
+            background: #ffe0b2 !important;
+            font-weight: bold;
+        }
+        
+        .assignment-marker {
+            background: #c8e6c9;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        
+        .project-marker {
+            background: #ffccbc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #d84315;
+        }
+        
+        .hours {
+            font-weight: bold;
+            color: #2196F3;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 22px; }
+            .controls { flex-direction: column; align-items: stretch; }
+            table { font-size: 11px; }
+            th, td { padding: 8px 5px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 45-Day IT Administration Master Study Plan</h1>
+            <p>Organization-Level Expertise in SharePoint, Netskope/DLP, Exchange & Azure Entra</p>
+        </div>
+        
+        <div class="controls">
+            <select id="moduleFilter">
+                <option value="all">All Modules</option>
+                <option value="sharepoint">SharePoint Admin (Days 1-15)</option>
+                <option value="netskope">Netskope & DLP (Days 16-25)</option>
+                <option value="exchange">Microsoft Exchange (Days 26-35)</option>
+                <option value="azure">Azure Entra ID (Days 36-45)</option>
+            </select>
+            <button onclick="downloadCSV()">📥 Download as CSV</button>
+            <button onclick="window.print()">🖨️ Print Plan</button>
+        </div>
+        
+        <div class="summary">
+            <h3>📊 Study Plan Overview</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <strong>Total Duration</strong>
+                    <div>45 Days</div>
+                </div>
+                <div class="summary-item">
+                    <strong>Daily Hours (Weekday)</strong>
+                    <div>3 Hours</div>
+                </div>
+                <div class="summary-item">
+                    <strong>Daily Hours (Weekend)</strong>
+                    <div>4 Hours</div>
+                </div>
+                <div class="summary-item">
+                    <strong>Total Study Hours</strong>
+                    <div>147 Hours</div>
+                </div>
+                <div class="summary-item">
+                    <strong>Assignments</strong>
+                    <div>22 Assignments</div>
+                </div>
+                <div class="summary-item">
+                    <strong>Projects</strong>
+                    <div>4 Major Projects</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table id="studyTable">
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Date</th>
+                        <th>Module</th>
+                        <th>Topic</th>
+                        <th>Practical/Lab</th>
+                        <th>Assignment/Project</th>
+                        <th>Hours</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- SharePoint Admin Days 1-15 -->
+                    <tr class="module-sharepoint">
+                        <td>1</td>
+                        <td>Mon</td>
+                        <td>SharePoint Admin</td>
+                        <td>SharePoint Architecture & Site Collections</td>
+                        <td>Create site collections, configure permissions</td>
+                        <td>-</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-sharepoint day-weekend">
+                        <td>2</td>
+                        <td>Sat</td>
+                        <td>SharePoint Admin</td>
+                        <td>Content Types & Metadata Management</td>
+                        <td>Build content types, site columns, term store</td>
+                        <td><span class="assignment-marker">Assignment 1</span> Design enterprise taxonomy</td>
+                        <td class="hours">4h</td>
+                    </tr>
+                    <tr class="module-sharepoint day-weekend">
+                        <td>3</td>
+                        <td>Sun</td>
+                        <td>SharePoint Admin</td>
+                        <td>Document Libraries & Automation</td>
+                        <td>Create libraries, configure versioning, workflows</td>
+                        <td>-</td>
+                        <td class="hours">4h</td>
+                    </tr>
+                    <tr class="module-sharepoint">
+                        <td>4</td>
+                        <td>Mon</td>
+                        <td>SharePoint Admin</td>
+                        <td>PowerShell Basics for SharePoint</td>
+                        <td>Run SharePoint cmdlets, create scripts</td>
+                        <td><span class="assignment-marker">Assignment 2</span> Automate site creation</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-sharepoint">
+                        <td>5</td>
+                        <td>Tue</td>
+                        <td>SharePoint Admin</td>
+                        <td>PowerShell Advanced - User & Group Management</td>
+                        <td>Bulk user provisioning, permission scripts</td>
+                        <td>-</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-sharepoint">
+                        <td>6</td>
+                        <td>Wed</td>
+                        <td>SharePoint Admin</td>
+                        <td>SharePoint Search & Crawling</td>
+                        <td>Configure search, create managed properties</td>
+                        <td><span class="assignment-marker">Assignment 3</span> Build custom search experience</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-sharepoint">
+                        <td>7</td>
+                        <td>Thu</td>
+                        <td>SharePoint Admin</td>
+                        <td>Information Rights Management & Security</td>
+                        <td>Configure IRM, DLP policies, access controls</td>
+                        <td>-</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-sharepoint">
+                        <td>8</td>
+                        <td>Fri</td>
+                        <td>SharePoint Admin</td>
+                        <td>Hub Sites & Multi-Geo Capabilities</td>
+                        <td>Create hub sites, configure navigation</td>
+                        <td><span class="assignment-marker">Assignment 4</span> Design hub architecture</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-sharepoint day-weekend">
+                        <td>9</td>
+                        <td>Sat</td>
+                        <td>SharePoint Admin</td>
+                        <td>PowerShell - Report Generation & Monitoring</td>
+                        <td>Create audit reports, usage analytics scripts</td>
+                        <td>-</td>
+                        <td class="hours">4h</td>
+                    </tr>
+                    <tr class="module-sharepoint day-weekend">
+                        <td>10</td>
+                        <td>Sun</td>
+                        <td>SharePoint Admin</td>
+                        <td>Migration & Hybrid SharePoint</td>
+                        <td>Use SharePoint Migration Tool, configure hybrid</td>
+                        <td><span class="assignment-marker">Assignment 5</span> Plan migration strategy</td>
+                        <td class="hours">4h</td>
+                    </tr>
+                    <tr class="module-sharepoint">
+                        <td>11</td>
+                        <td>Mon</td>
+                        <td>SharePoint Admin</td>
+                        <td>SharePoint Framework (SPFx) Basics</td>
+                        <td>Set up dev environment, create web part</td>
+                        <td>-</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-sharepoint">
+                        <td>12</td>
+                        <td>Tue</td>
+                        <td>SharePoint Admin</td>
+                        <td>Power Automate Integration</td>
+                        <td>Build approval flows, document automation</td>
+                        <td><span class="assignment-marker">Assignment 6</span> Create org workflow</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-sharepoint">
+                        <td>13</td>
+                        <td>Wed</td>
+                        <td>SharePoint Admin</td>
+                        <td>SharePoint Online Admin Center Deep Dive</td>
+                        <td>Configure settings, policies, quotas</td>
+                        <td>-</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-sharepoint">
+                        <td>14</td>
+                        <td>Thu</td>
+                        <td>SharePoint Admin</td>
+                        <td>Backup, Restore & Disaster Recovery</td>
+                        <td>Configure versioning, recycle bins, retention</td>
+                        <td><span class="assignment-marker">Assignment 7</span> DR plan document</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-sharepoint">
+                        <td>15</td>
+                        <td>Fri</td>
+                        <td>SharePoint Admin</td>
+                        <td>PROJECT: Enterprise Intranet Build</td>
+                        <td>Build complete intranet with all features</td>
+                        <td><span class="project-marker">Project 1</span> Full intranet deployment</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    
+                    <!-- Netskope & DLP Days 16-25 -->
+                    <tr class="module-netskope day-weekend">
+                        <td>16</td>
+                        <td>Sat</td>
+                        <td>Netskope & DLP</td>
+                        <td>Cloud Security Fundamentals & CASB Overview</td>
+                        <td>Understand CASB architecture, threat landscape</td>
+                        <td>-</td>
+                        <td class="hours">4h</td>
+                    </tr>
+                    <tr class="module-netskope day-weekend">
+                        <td>17</td>
+                        <td>Sun</td>
+                        <td>Netskope & DLP</td>
+                        <td>Netskope Architecture & Deployment</td>
+                        <td>Install client, configure steering, test connectivity</td>
+                        <td><span class="assignment-marker">Assignment 8</span> Deployment plan</td>
+                        <td class="hours">4h</td>
+                    </tr>
+                    <tr class="module-netskope">
+                        <td>18</td>
+                        <td>Mon</td>
+                        <td>Netskope & DLP</td>
+                        <td>DLP Policies - Data Classification</td>
+                        <td>Create data identifiers, build classification rules</td>
+                        <td>-</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-netskope">
+                        <td>19</td>
+                        <td>Tue</td>
+                        <td>Netskope & DLP</td>
+                        <td>DLP Policy Creation & Testing</td>
+                        <td>Build DLP policies for PII, PHI, financial data</td>
+                        <td><span class="assignment-marker">Assignment 9</span> Create 5 DLP policies</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-netskope">
+                        <td>20</td>
+                        <td>Wed</td>
+                        <td>Netskope & DLP</td>
+                        <td>Cloud App Discovery & Shadow IT</td>
+                        <td>Run discovery, analyze risk, create policies</td>
+                        <td>-</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-netskope">
+                        <td>21</td>
+                        <td>Thu</td>
+                        <td>Netskope & DLP</td>
+                        <td>Advanced Threat Protection</td>
+                        <td>Configure ATP policies, test malware detection</td>
+                        <td><span class="assignment-marker">Assignment 10</span> ATP config document</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-netskope">
+                        <td>22</td>
+                        <td>Fri</td>
+                        <td>Netskope & DLP</td>
+                        <td>Real-time Protection & Inline Policies</td>
+                        <td>Build inline policies, test blocking scenarios</td>
+                        <td>-</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-netskope day-weekend">
+                        <td>23</td>
+                        <td>Sat</td>
+                        <td>Netskope & DLP</td>
+                        <td>Incident Response & Forensics</td>
+                        <td>Investigate incidents, create remediation workflow</td>
+                        <td><span class="assignment-marker">Assignment 11</span> Incident playbook</td>
+                        <td class="hours">4h</td>
+                    </tr>
+                    <tr class="module-netskope day-weekend">
+                        <td>24</td>
+                        <td>Sun</td>
+                        <td>Netskope & DLP</td>
+                        <td>Reporting & Analytics</td>
+                        <td>Build executive dashboards, compliance reports</td>
+                        <td>-</td>
+                        <td class="hours">4h</td>
+                    </tr>
+                    <tr class="module-netskope">
+                        <td>25</td>
+                        <td>Mon</td>
+                        <td>Netskope & DLP</td>
+                        <td>PROJECT: Enterprise DLP Framework</td>
+                        <td>Build complete DLP solution for organization</td>
+                        <td><span class="project-marker">Project 2</span> Full DLP deployment</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    
+                    <!-- Microsoft Exchange Days 26-35 -->
+                    <tr class="module-exchange">
+                        <td>26</td>
+                        <td>Tue</td>
+                        <td>Microsoft Exchange</td>
+                        <td>Exchange Architecture & Mail Flow</td>
+                        <td>Understand transport pipeline, create connectors</td>
+                        <td>-</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-exchange">
+                        <td>27</td>
+                        <td>Wed</td>
+                        <td>Microsoft Exchange</td>
+                        <td>Mailbox Management & Provisioning</td>
+                        <td>Create mailboxes, shared mailboxes, room resources</td>
+                        <td><span class="assignment-marker">Assignment 12</span> Bulk mailbox creation</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-exchange">
+                        <td>28</td>
+                        <td>Thu</td>
+                        <td>Microsoft Exchange</td>
+                        <td>Exchange PowerShell Deep Dive</td>
+                        <td>Master Exchange cmdlets, create automation scripts</td>
+                        <td>-</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-exchange">
+                        <td>29</td>
+                        <td>Fri</td>
+                        <td>Microsoft Exchange</td>
+                        <td>Mail Flow Rules & Transport Rules</td>
+                        <td>Create disclaimers, routing rules, journaling</td>
+                        <td><span class="assignment-marker">Assignment 13</span> 10 transport rules</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-exchange day-weekend">
+                        <td>30</td>
+                        <td>Sat</td>
+                        <td>Microsoft Exchange</td>
+                        <td>Anti-Spam & Anti-Malware Protection</td>
+                        <td>Configure EOP, spam filters, quarantine policies</td>
+                        <td>-</td>
+                        <td class="hours">4h</td>
+                    </tr>
+                    <tr class="module-exchange day-weekend">
+                        <td>31</td>
+                        <td>Sun</td>
+                        <td>Microsoft Exchange</td>
+                        <td>Advanced Email Security (ATP/Defender)</td>
+                        <td>Configure Safe Links, Safe Attachments, anti-phishing</td>
+                        <td><span class="assignment-marker">Assignment 14</span> Security baseline doc</td>
+                        <td class="hours">4h</td>
+                    </tr>
+                    <tr class="module-exchange">
+                        <td>32</td>
+                        <td>Mon</td>
+                        <td>Microsoft Exchange</td>
+                        <td>Retention Policies & eDiscovery</td>
+                        <td>Create retention tags, perform eDiscovery search</td>
+                        <td>-</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-exchange">
+                        <td>33</td>
+                        <td>Tue</td>
+                        <td>Microsoft Exchange</td>
+                        <td>Hybrid Exchange Configuration</td>
+                        <td>Configure hybrid, test mail routing, migration</td>
+                        <td><span class="assignment-marker">Assignment 15</span> Hybrid topology design</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-exchange">
+                        <td>34</td>
+                        <td>Wed</td>
+                        <td>Microsoft Exchange</td>
+                        <td>Monitoring, Troubleshooting & Message Tracking</td>
+                        <td>Use message tracking, analyze logs, performance tuning</td>
+                        <td>-</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-exchange">
+                        <td>35</td>
+                        <td>Thu</td>
+                        <td>Microsoft Exchange</td>
+                        <td>PROJECT: Enterprise Email System Setup</td>
+                        <td>Deploy complete Exchange environment with all features</td>
+                        <td><span class="project-marker">Project 3</span> Full Exchange deployment</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    
+                    <!-- Azure Entra ID Days 36-45 (Extended to 10 days) -->
+                    <tr class="module-azure">
+                        <td>36</td>
+                        <td>Fri</td>
+                        <td>Azure Entra ID</td>
+                        <td>Azure AD/Entra ID Architecture & Tenants</td>
+                        <td>Create tenant, configure domains, understand licensing</td>
+                        <td>-</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-azure day-weekend">
+                        <td>37</td>
+                        <td>Sat</td>
+                        <td>Azure Entra ID</td>
+                        <td>User & Group Management</td>
+                        <td>Bulk user creation, dynamic groups, administrative units</td>
+                        <td><span class="assignment-marker">Assignment 16</span> Provision 100 users with PowerShell</td>
+                        <td class="hours">4h</td>
+                    </tr>
+                    <tr class="module-azure day-weekend">
+                        <td>38</td>
+                        <td>Sun</td>
+                        <td>Azure Entra ID</td>
+                        <td>Application Registration & Enterprise Apps</td>
+                        <td>Register apps, configure permissions, SSO setup</td>
+                        <td>-</td>
+                        <td class="hours">4h</td>
+                    </tr>
+                    <tr class="module-azure">
+                        <td>39</td>
+                        <td>Mon</td>
+                        <td>Azure Entra ID</td>
+                        <td>Conditional Access Policies - Part 1</td>
+                        <td>Build location-based CA, device compliance policies</td>
+                        <td><span class="assignment-marker">Assignment 17</span> Create 5 CA policies</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-azure">
+                        <td>40</td>
+                        <td>Tue</td>
+                        <td>Azure Entra ID</td>
+                        <td>Conditional Access Policies - Part 2</td>
+                        <td>Risk-based CA, app control, session policies</td>
+                        <td>-</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-azure">
+                        <td>41</td>
+                        <td>Wed</td>
+                        <td>Azure Entra ID</td>
+                        <td>Multi-Factor Authentication & Passwordless</td>
+                        <td>Configure MFA methods, FIDO2, Windows Hello</td>
+                        <td><span class="assignment-marker">Assignment 18</span> MFA deployment plan</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-azure">
+                        <td>42</td>
+                        <td>Thu</td>
+                        <td>Azure Entra ID</td>
+                        <td>Identity Protection & Risk Detection</td>
+                        <td>Configure risk policies, investigate risky users</td>
+                        <td>-</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-azure">
+                        <td>43</td>
+                        <td>Fri</td>
+                        <td>Azure Entra ID</td>
+                        <td>Privileged Identity Management (PIM)</td>
+                        <td>Set up PIM, configure JIT access, approval workflows</td>
+                        <td><span class="assignment-marker">Assignment 19</span> PIM governance plan</td>
+                        <td class="hours">3h</td>
+                    </tr>
+                    <tr class="module-azure day-weekend">
+                        <td>44</td>
+                        <td>Sat</td>
+                        <td>Azure Entra ID</td>
+                        <td>Identity Governance & Access Reviews</td>
+                        <td>Create access reviews, lifecycle workflows, entitlement management</td>
+                        <td><span class="assignment-marker">Assignment 20</span> Quarterly access review process</td>
+                        <td class="hours">4h</td>
+                    </tr>
+                    <tr class="module-azure day-weekend">
+                        <td>45</td>
+                        <td>Sun</td>
+                        <td>Azure Entra ID</td>
+                        <td>PROJECT: Zero Trust Identity Infrastructure</td>
+                        <td>Build complete identity solution: SSO, MFA, CA, PIM, governance</td>
+                        <td><span class="project-marker">Project 4</span> Full Entra enterprise deployment</td>
+                        <td class="hours">4h</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const table = document.getElementById('studyTable');
+        const tbody = table.querySelector('tbody');
+        const allRows = Array.from(tbody.querySelectorAll('tr'));
+        
+        document.getElementById('moduleFilter').addEventListener('change', function(e) {
+            const filter = e.target.value;
+            
+            allRows.forEach(row => {
+                if (filter === 'all') {
+                    row.style.display = '';
+                } else {
+                    const moduleClass = `module-${filter}`;
+                    if (row.classList.contains(moduleClass)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        });
+        
+        function downloadCSV() {
+            let csv = 'Day,Date,Module,Topic,Practical/Lab,Assignment/Project,Hours\n';
+            
+            allRows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const rowData = Array.from(cells).map(cell => {
+                    let text = cell.textContent.trim();
+                    text = text.replace(/"/g, '""');
+                    return `"${text}"`;
+                });
+                csv += rowData.join(',') + '\n';
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'IT_Administration_Study_Plan.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
