@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharePoint Admin Day 1 - Study Notes</title>
+    <style>
+        @media print {
+            body { margin: 0; padding: 20px; }
+            .page-break { page-break-before: always; }
+            h1, h2 { page-break-after: avoid; }
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 4px solid #0078d4;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #0078d4;
+            margin: 0;
+            font-size: 2.5em;
+        }
+        
+        .header .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        
+        .meta-info {
+            background: #e8f4fd;
+            padding: 15px;
+            border-left: 4px solid #0078d4;
+            margin: 20px 0;
+        }
+        
+        h2 {
+            color: #0078d4;
+            border-bottom: 2px solid #0078d4;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+        
+        h3 {
+            color: #005a9e;
+            margin-top: 25px;
+        }
+        
+        h4 {
+            color: #333;
+            margin-top: 20px;
+        }
+        
+        .highlight-box {
+            background: #fff4ce;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .info-box {
+            background: #e8f4fd;
+            border-left: 4px solid #0078d4;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .warning-box {
+            background: #ffe8e8;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th {
+            background: #0078d4;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        ul, ol {
+            margin: 10px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        pre code {
+            background: transparent;
+            color: #f8f8f2;
+            padding: 0;
+        }
+        
+        .checklist {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .checklist li:before {
+            content: "☐ ";
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .architecture-diagram {
+            background: #f8f9fa;
+            padding: 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 20px 0;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SharePoint Admin Day 1</h1>
+            <div class="subtitle">Complete Study Notes</div>
+        </div>
+        
+        <div class="meta-info">
+            <strong>Topic:</strong> SharePoint Architecture & Site Collections<br>
+            <strong>Duration:</strong> 3 hours<br>
+            <strong>Focus Areas:</strong> Architecture, Site Collections, Permissions, Governance
+        </div>
+
+        <h2>Table of Contents</h2>
+        <ol>
+            <li>SharePoint Online vs On-Premises Architecture</li>
+            <li>Tenant, Site Collection, and Site Hierarchy</li>
+            <li>Hub Sites and Site Organization</li>
+            <li>Storage and Governance</li>
+            <li>Permission Models</li>
+            <li>Site Collection Creation and Management</li>
+        </ol>
+
+        <div class="page-break"></div>
+
+        <h2>1. SharePoint Online vs On-Premises Architecture</h2>
+
+        <h3>SharePoint Online (Cloud-based)</h3>
+
+        <div class="info-box">
+            <strong>Key Characteristics:</strong>
+            <ul>
+                <li><strong>Hosted by Microsoft</strong> - No server management required</li>
+                <li><strong>Automatic updates</strong> - Always on the latest version</li>
+                <li><strong>Subscription-based</strong> - Part of Microsoft 365</li>
+                <li><strong>Elastic storage</strong> - Storage scales with licenses</li>
+                <li><strong>Global availability</strong> - Accessible from anywhere with internet</li>
+                <li><strong>Built-in security</strong> - Microsoft handles infrastructure security</li>
+            </ul>
+        </div>
+
+        <h4>Architecture Components</h4>
+        <ul>
+            <li>Multi-tenant architecture (shared infrastructure, isolated data)</li>
+            <li>Integrated with Microsoft 365 services (Teams, OneDrive, Outlook)</li>
+            <li>Modern experience focus (responsive, mobile-friendly)</li>
+            <li>Cloud-based apps and workflows (Power Automate, Power Apps)</li>
+        </ul>
+
+        <h4>Advantages</h4>
+        <ul>
+            <li>No infrastructure costs or maintenance</li>
+            <li>Rapid deployment and scalability</li>
+            <li>Regular feature updates</li>
+            <li>High availability and disaster recovery built-in</li>
+            <li>Reduced IT overhead</li>
+        </ul>
+
+        <h4>Limitations</h4>
+        <ul>
+            <li>Internet dependency</li>
+            <li>Limited customization compared to on-premises</li>
+            <li>Compliance requirements may restrict cloud adoption</li>
+            <li>Less control over infrastructure</li>
+        </ul>
+
+        <h3>SharePoint On-Premises (Server-based)</h3>
+
+        <div class="info-box">
+            <strong>Key Characteristics:</strong>
+            <ul>
+                <li><strong>Self-hosted</strong> - Runs on your own servers</li>
+                <li><strong>Full control</strong> - Complete control over hardware, software, updates</li>
+                <li><strong>One-time licensing</strong> - Purchase SharePoint Server license + CALs</li>
+                <li><strong>Manual updates</strong> - IT team controls update schedule</li>
+                <li><strong>On-site or data center</strong> - Data stays within your infrastructure</li>
+            </ul>
+        </div>
+
+        <h4>Architecture Components</h4>
+        <ul>
+            <li>Farm architecture (Web Front End, Application, Database servers)</li>
+            <li>Classic experience primary (modern experience limited)</li>
+            <li>Custom solutions and farm solutions supported</li>
+            <li>SharePoint Designer workflows</li>
+        </ul>
+
+        <h4>Advantages</h4>
+        <ul>
+            <li>Complete control over environment</li>
+            <li>Full customization capabilities</li>
+            <li>Data sovereignty (stays on your servers)</li>
+            <li>Can work without internet connectivity</li>
+            <li>Legacy system integration easier</li>
+        </ul>
+
+        <h4>Limitations</h4>
+        <ul>
+            <li>High infrastructure and maintenance costs</li>
+            <li>Requires dedicated IT staff</li>
+            <li>Manual updates and patches</li>
+            <li>Scalability requires hardware investment</li>
+            <li>Disaster recovery is your responsibility</li>
+        </ul>
+
+        <h3>SharePoint Hybrid (Best of Both Worlds)</h3>
+
+        <div class="highlight-box">
+            <strong>What is Hybrid?</strong><br>
+            Combination of SharePoint Online and On-Premises that allows gradual migration to cloud while maintaining on-premises investment.
+        </div>
+
+        <h4>Common Hybrid Scenarios</h4>
+        <ul>
+            <li><strong>Hybrid Search</strong> - Unified search across both environments</li>
+            <li><strong>Hybrid OneDrive</strong> - Users get OneDrive in cloud while using on-premises SharePoint</li>
+            <li><strong>Hybrid Sites</strong> - Redirects My Sites to SharePoint Online</li>
+            <li><strong>Hybrid Taxonomy</strong> - Shared term store across environments</li>
+        </ul>
+
+        <div class="page-break"></div>
+
+        <h2>2. Tenant, Site Collection, and Site Hierarchy</h2>
+
+        <h3>Tenant Level (Top of Hierarchy)</h3>
+
+        <div class="info-box">
+            <strong>What is a Tenant?</strong><br>
+            Your organization's entire SharePoint Online instance (e.g., <code>contoso.sharepoint.com</code>). Single tenant per Microsoft 365 subscription containing all site collections for your organization.
+        </div>
+
+        <h4>Tenant-level Settings</h4>
+        <ul>
+            <li>Global sharing policies</li>
+            <li>Default storage limits</li>
+            <li>External sharing controls</li>
+            <li>Organization-wide branding</li>
+            <li>Tenant app catalog</li>
+            <li>Data loss prevention (DLP) policies</li>
+        </ul>
+
+        <p><strong>Managed by:</strong> Global administrators and SharePoint administrators</p>
+
+        <h3>Site Collection Level (Second Layer)</h3>
+
+        <div class="info-box">
+            <strong>What is a Site Collection?</strong><br>
+            Independent container of sites with shared characteristics. Security boundary where permissions don't cross site collections.
+        </div>
+
+        <h4>Site Collection Characteristics</h4>
+        <ul>
+            <li>Has own URL: <code>https://contoso.sharepoint.com/sites/marketing</code></li>
+            <li>Storage quota allocated from tenant pool</li>
+            <li>Own recycle bin, audit logs, and settings</li>
+            <li><strong>Isolation boundary</strong> - Content and permissions are separate</li>
+            <li><strong>Own governance</strong> - Unique retention, compliance policies</li>
+            <li><strong>Recovery unit</strong> - Can restore entire site collection</li>
+        </ul>
+
+        <h4>Site Collection Contains</h4>
+        <ul>
+            <li>Root site (top-level site)</li>
+            <li>Subsites (optional child sites)</li>
+            <li>Document libraries and lists</li>
+            <li>Site collection features</li>
+            <li>Site collection administrators</li>
+        </ul>
+
+        <div class="highlight-box">
+            <strong>When to Create New Site Collection:</strong>
+            <ul>
+                <li>Different departments with separate security needs</li>
+                <li>Projects requiring isolated permissions</li>
+                <li>Different compliance or retention requirements</li>
+                <li>Need for separate branding or customization</li>
+                <li>Distinct business units or teams</li>
+            </ul>
+        </div>
+
+        <h3>Site Level (Third Layer)</h3>
+
+        <h4>Team Sites</h4>
+        <ul>
+            <li>Collaboration-focused</li>
+            <li>Connected to Microsoft 365 Group</li>
+            <li>Includes Teams integration, shared mailbox, calendar</li>
+            <li>Default document library</li>
+            <li>Members can contribute content</li>
+        </ul>
+
+        <h4>Communication Sites</h4>
+        <ul>
+            <li>Broadcasting information (intranet pages, news, announcements)</li>
+            <li>Not connected to Microsoft 365 Group</li>
+            <li>Designed for few authors, many readers</li>
+            <li>Rich publishing capabilities</li>
+            <li>Modern web parts and layouts</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>Important Note:</strong> Microsoft recommends <strong>flat architecture</strong> (no subsites) in modern SharePoint. Use hub sites for organization instead.
+        </div>
+
+        <h3>Hierarchy Visualization</h3>
+
+        <div class="architecture-diagram">
+Tenant (contoso.sharepoint.com)
+│
+├── Site Collection 1 (/sites/marketing)
+│   ├── Root Site (Marketing Home)
+│   ├── Document Libraries
+│   └── Lists
+│
+├── Site Collection 2 (/sites/hr)
+│   ├── Root Site (HR Portal)
+│   ├── Subsite (Recruitment) [Classic only]
+│   └── Subsite (Benefits) [Classic only]
+│
+└── Site Collection 3 (/sites/projects)
+    └── Root Site (Project Hub)
+        </div>
+
+        <div class="page-break"></div>
+
+        <h2>3. Hub Sites and Site Organization</h2>
+
+        <h3>What are Hub Sites?</h3>
+
+        <div class="info-box">
+            <strong>Definition:</strong><br>
+            Hub sites connect related sites together for unified navigation, branding, and search. They are NOT a security boundary, just organizational grouping where sites associate with hubs voluntarily.
+        </div>
+
+        <h4>Key Benefits</h4>
+        <ul>
+            <li><strong>Unified navigation</strong> - Shared top navigation across associated sites</li>
+            <li><strong>Common branding</strong> - Consistent look and feel</li>
+            <li><strong>Aggregated content</strong> - Roll-up news, events, activities</li>
+            <li><strong>Unified search</strong> - Search across all hub-associated sites</li>
+            <li><strong>Flexibility</strong> - Sites can join/leave hubs easily</li>
+        </ul>
+
+        <h3>Hub Site Architecture</h3>
+
+        <div class="architecture-diagram">
+Hub Site (Marketing Hub)
+│
+├── Associated Site 1 (Product Marketing)
+├── Associated Site 2 (Content Marketing)
+├── Associated Site 3 (Events)
+└── Associated Site 4 (Brand Guidelines)
+        </div>
+
+        <div class="highlight-box">
+            <strong>Important Notes:</strong>
+            <ul>
+                <li>Hub sites are <strong>regular site collections</strong> registered as hubs</li>
+                <li>Sites maintain their own permissions</li>
+                <li>Can have up to 2,000 sites associated with one hub</li>
+                <li>Hub site navigation appears on all associated sites</li>
+            </ul>
+        </div>
+
+        <h3>When to Use Hub Sites</h3>
+        <ul>
+            <li>Organizing department sites (HR hub with Recruitment, Benefits, Training sites)</li>
+            <li>Project portfolios (Project hub with individual project sites)</li>
+            <li>Regional organization (EMEA hub with country-specific sites)</li>
+            <li>Topic-based organization (Product hub with different product sites)</li>
+        </ul>
+
+        <h3>Planning Hub Site Structure</h3>
+        <ol>
+            <li><strong>Identify logical groupings</strong> - What sites naturally belong together?</li>
+            <li><strong>Define hub owners</strong> - Who manages the hub navigation and branding?</li>
+            <li><strong>Plan navigation</strong> - What links should appear in hub navigation?</li>
+            <li><strong>Consider search scope</strong> - Do users need to search across these sites together?</li>
+            <li><strong>Branding consistency</strong> - Should these sites share theme and logo?</li>
+        </ol>
+
+        <h3>Modern vs Classic Site Organization</h3>
+
+        <table>
+            <tr>
+                <th>Classic Approach (Deprecated)</th>
+                <th>Modern Approach (Recommended)</th>
+            </tr>
+            <tr>
+                <td>Heavy use of subsites</td>
+                <td>Flat architecture - all sites at root level</td>
+            </tr>
+            <tr>
+                <td>Deep hierarchies (site → subsite → sub-subsite)</td>
+                <td>Hub sites for organization</td>
+            </tr>
+            <tr>
+                <td>Complicated permission inheritance</td>
+                <td>Clear permissions - each site manages its own</td>
+            </tr>
+            <tr>
+                <td>Difficult to reorganize</td>
+                <td>Flexible - easy to reorganize by changing hub associations</td>
+            </tr>
+        </table>
+
+        <div class="page-break"></div>
+
+        <h2>4. Storage and Governance</h2>
+
+        <h3>Storage Architecture</h3>
+
+        <h4>Tenant Storage Pool</h4>
+        <div class="success-box">
+            <strong>Formula:</strong> Base storage = 1 TB + 10 GB per licensed user<br>
+            <strong>Example:</strong> 100 users = 1 TB + 1 GB (100 × 10 GB) = 2 TB total
+        </div>
+
+        <ul>
+            <li>Shared pool across all site collections</li>
+            <li>Additional storage can be purchased</li>
+        </ul>
+
+        <h4>Site Collection Storage</h4>
+        <ul>
+            <li>Default: Each new site gets storage from tenant pool</li>
+            <li>Can set custom storage quotas per site collection</li>
+            <li>Storage warnings at 90% capacity</li>
+            <li>Can reallocate storage between site collections</li>
+        </ul>
+
+        <h4>Storage Management</h4>
+        <ul>
+            <li><strong>Active Storage admin center</strong> - Monitor usage across tenant</li>
+            <li><strong>Site storage metrics</strong> - See what's consuming space</li>
+            <li><strong>Recycle bins</strong> - Two-stage (site and site collection level)</li>
+            <li><strong>Version history</strong> - Consumes storage (can limit versions)</li>
+        </ul>
+
+        <div class="highlight-box">
+            <strong>Storage Best Practices:</strong>
+            <ul>
+                <li>Monitor storage usage regularly</li>
+                <li>Set appropriate quotas based on business needs</li>
+                <li>Enable versioning limits (e.g., keep last 50 versions)</li>
+                <li>Clean up unused sites periodically</li>
+                <li>Use retention policies to auto-delete old content</li>
+            </ul>
+        </div>
+
+        <h3>Governance Framework</h3>
+
+        <div class="info-box">
+            <strong>What is Governance?</strong><br>
+            Policies, procedures, and controls for managing SharePoint that ensure security, compliance, and efficient usage while balancing user freedom with organizational control.
+        </div>
+
+        <h4>1. Site Provisioning Governance</h4>
+
+        <p><strong>Who can create sites?</strong></p>
+        <ul>
+            <li><strong>Option 1:</strong> Anyone (self-service) - Most flexible, requires monitoring</li>
+            <li><strong>Option 2:</strong> IT only - Most controlled, can create bottleneck</li>
+            <li><strong>Option 3:</strong> Designated owners - Balanced approach</li>
+        </ul>
+
+        <p><strong>Site Lifecycle:</strong></p>
+        <ul>
+            <li><strong>Creation</strong> - Who, when, how</li>
+            <li><strong>Active use</strong> - Regular review of activity</li>
+            <li><strong>Archival</strong> - Inactive site handling (read-only)</li>
+            <li><strong>Deletion</strong> - Cleanup of unused sites (93-day recycle bin)</li>
+        </ul>
+
+        <h4>2. Security and Compliance Governance</h4>
+
+        <p><strong>Access Control:</strong></p>
+        <ul>
+            <li>External sharing policies (disabled, existing guests, new and existing, anyone)</li>
+            <li>Conditional access (location, device-based access)</li>
+            <li>Multi-factor authentication requirements</li>
+            <li>Privileged access management</li>
+        </ul>
+
+        <p><strong>Data Protection:</strong></p>
+        <ul>
+            <li><strong>Sensitivity labels</strong> - Classify and protect content (Confidential, Internal, Public)</li>
+            <li><strong>Data Loss Prevention (DLP)</strong> - Prevent sensitive data leaks</li>
+            <li><strong>Retention policies</strong> - Keep data for required period, delete after</li>
+            <li><strong>eDiscovery</strong> - Legal hold and search capabilities</li>
+        </ul>
+
+        <h4>3. Information Architecture Governance</h4>
+
+        <p><strong>Content Organization:</strong></p>
+        <ul>
+            <li>Hub site structure</li>
+            <li>Site and library naming conventions</li>
+            <li>Metadata standards (required columns)</li>
+            <li>Content types across organization</li>
+        </ul>
+
+        <h4>4. User Experience Governance</h4>
+
+        <p><strong>Branding and Customization:</strong></p>
+        <ul>
+            <li>Organization-wide themes</li>
+            <li>Hub site themes</li>
+            <li>Approved web parts and extensions</li>
+            <li>Custom development guidelines</li>
+        </ul>
+
+        <div class="page-break"></div>
+
+        <h2>5. Permission Models</h2>
+
+        <h3>SharePoint Permission Levels (Default)</h3>
+
+        <table>
+            <tr>
+                <th>Permission Level</th>
+                <th>Can Do</th>
+                <th>Typical Use</th>
+            </tr>
+            <tr>
+                <td><strong>Full Control</strong></td>
+                <td>Everything including changing permissions</td>
+                <td>Site collection admins</td>
+            </tr>
+            <tr>
+                <td><strong>Design</strong></td>
+                <td>Create lists/libraries, edit pages, apply themes</td>
+                <td>Site designers</td>
+            </tr>
+            <tr>
+                <td><strong>Edit</strong></td>
+                <td>Add, edit, delete items and documents</td>
+                <td>Power users</td>
+            </tr>
+            <tr>
+                <td><strong>Contribute</strong></td>
+                <td>Add, edit, delete own items, view all items</td>
+                <td>Team members</td>
+            </tr>
+            <tr>
+                <td><strong>Read</strong></td>
+                <td>View pages and items, download documents</td>
+                <td>General viewers</td>
+            </tr>
+            <tr>
+                <td><strong>View Only</strong></td>
+                <td>View items but cannot download</td>
+                <td>Restricted viewing</td>
+            </tr>
+            <tr>
+                <td><strong>Limited Access</strong></td>
+                <td>Access specific items (system-managed)</td>
+                <td>Broken inheritance scenarios</td>
+            </tr>
+        </table>
+
+        <h3>SharePoint Groups</h3>
+
+        <div class="info-box">
+            <strong>Default Groups (Created with each site):</strong>
+            <ol>
+                <li><strong>Owners</strong> - Full Control permission level</li>
+                <li><strong>Members</strong> - Edit or Contribute permission level</li>
+                <li><strong>Visitors</strong> - Read permission level</li>
+            </ol>
+        </div>
+
+        <div class="success-box">
+            <strong>Best Practice:</strong> Always assign permissions to groups, not individuals
+        </div>
+
+        <h3>Permission Inheritance</h3>
+
+        <div class="architecture-diagram">
+Site Collection
+    ↓ (inherits)
+Site
+    ↓ (inherits)
+Document Library
+    ↓ (inherits)
+Folder
+    ↓ (inherits)
+Document
+        </div>
+
+        <h4>Inheritance Rules</h4>
+        <ul>
+            <li>Child objects inherit permissions from parent by default</li>
+            <li>Simplifies permission management</li>
+            <li>Reduces administrative overhead</li>
+            <li>Easier to audit</li>
+        </ul>
+
+        <h4>Breaking Inheritance</h4>
+
+        <p><strong>When to Break:</strong></p>
+        <ul>
+            <li>Confidential content requiring restricted access</li>
+            <li>Department-specific folders in shared library</li>
+            <li>Sensitive documents</li>
+            <li>Project-specific security needs</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>Consequences of Breaking:</strong>
+            <ul>
+                <li>Creates unique permissions (no longer inherits)</li>
+                <li>More complex to manage</li>
+                <li>Harder to audit</li>
+                <li>Can lead to permission sprawl</li>
+            </ul>
+        </div>
+
+        <h3>Permission Best Practices</h3>
+
+        <ol>
+            <li><strong>Use Groups, Not Individuals</strong> - Easier to manage, clearer security model</li>
+            <li><strong>Follow Least Privilege Principle</strong> - Give minimum permissions needed</li>
+            <li><strong>Minimize Permission Breaks</strong> - Keep inheritance where possible</li>
+            <li><strong>Regular Audits</strong> - Review who has access quarterly</li>
+            <li><strong>Document Your Model</strong> - Standard operating procedures</li>
+            <li><strong>External Sharing Controls</strong> - Set appropriate tenant-level policies</li>
+            <li><strong>Use Sensitivity Labels</strong> - Automatic permission application</li>
+        </ol>
+
+        <div class="page-break"></div>
+
+        <h2>6. Site Collection Creation and Management</h2>
+
+        <h3>Creating Site Collections</h3>
+
+        <h4>Method 1: SharePoint Admin Center (GUI)</h4>
+
+        <div class="info-box">
+            <strong>Steps:</strong>
+            <ol>
+                <li>Go to <strong>SharePoint Admin Center</strong> (admin.microsoft.com → SharePoint)</li>
+                <li>Click <strong>Sites</strong> → <strong>Active sites</strong></li>
+                <li>Click <strong>+ Create</strong></li>
+                <li>Choose site type: Team site or Communication site</li>
+                <li>Fill in details: Site name, administrator, language, time zone</li>
+                <li>Set storage quota (optional)</li>
+                <li>Review and create</li>
+            </ol>
+        </div>
+
+        <h4>Method 2: PowerShell (Automation)</h4>
+
+        <p><strong>Benefits:</strong> Bulk creation, scripted provisioning, custom configurations, automation</p>
+
+        <pre><code># Connect to SharePoint Online
+Connect-SPOService -Url https://contoso-admin.sharepoint.com
+
+# Create Communication Site
+New-SPOSite -Url https://contoso.sharepoint.com/sites/marketing `
+            -Owner admin@contoso.com `
+            -StorageQuota 1024 `
+            -Title "Marketing Site" `
+            -Template SITEPAGEPUBLISHING#0
+
+# Create Team Site (no group)
+New-SPOSite -Url https://contoso.sharepoint.com/sites/project1 `
+            -Owner admin@contoso.com `
+            -StorageQuota 2048 `
+            -Title "Project Alpha" `
+            -Template STS#3</code></pre>
+
+        <h4>Method 3: Self-Service (End Users)</h4>
+
+        <div class="highlight-box">
+            <strong>Governance Considerations:</strong>
+            <ul>
+                <li>Can lead to site sprawl</li>
+                <li>Requires monitoring</li>
+                <li><strong>Benefits:</strong> Faster provisioning, user empowerment</li>
+                <li><strong>Risks:</strong> Unused sites, inconsistent naming</li>
+            </ul>
+        </div>
+
+        <h3>Site Collection Configuration</h3>
+
+        <h4>Storage Management</h4>
+        <ul>
+            <li>Set storage limits (manual or automatic)</li>
+            <li>Set warning threshold (e.g., 90%)</li>
+            <li>Monitor current usage and growth trends</li>
+        </ul>
+
+        <h4>Site Collection Administrators</h4>
+
+        <p><strong>Admin Capabilities:</strong></p>
+        <ul>
+            <li>Full control of site collection</li>
+            <li>Access all content (even if not explicitly shared)</li>
+            <li>Manage site collection features</li>
+            <li>Restore from recycle bin (both stages)</li>
+            <li>Access site collection audit logs</li>
+        </ul>
+
+        <h3>Site Collection Policies</h3>
+
+        <h4>Sharing Policies</h4>
+
+        <table>
+            <tr>
+                <th>Level</th>
+                <th>Options</th>
+            </tr>
+            <tr>
+                <td><strong>Tenant Level</strong></td>
+                <td>Anyone, New and existing guests, Existing guests only, Only people in organization</td>
+            </tr>
+            <tr>
+                <td><strong>Site Level</strong></td>
+                <td>Can inherit from tenant OR be more restrictive (cannot be more permissive)</td>
+            </tr>
+        </table>
+
+        <h4>Access Control</h4>
+        <ul>
+            <li>Unmanaged devices (block, limited access, full access)
