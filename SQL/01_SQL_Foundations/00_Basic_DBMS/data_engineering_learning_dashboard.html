@@ -1,0 +1,187 @@
+
+<style>
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+  .badge-done { background: var(--color-background-success); color: var(--color-text-success); }
+  .badge-key { background: var(--color-background-info); color: var(--color-text-info); }
+  .section-title { font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin: 1.5rem 0 0.5rem; }
+  .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 8px; margin-bottom: 12px; }
+  .concept-box { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 12px; cursor: pointer; transition: background 0.15s; }
+  .concept-box:hover { background: var(--color-background-tertiary); }
+  .concept-box .label { font-size: 12px; font-weight: 500; color: var(--color-text-primary); }
+  .concept-box .sub { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+  .flow-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+  .flow-pill { font-size: 12px; padding: 4px 10px; border-radius: 20px; border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); color: var(--color-text-secondary); }
+  .flow-arr { color: var(--color-text-tertiary); font-size: 14px; }
+  .flow-pill.highlight { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+  .role-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .role-card { border-radius: var(--border-radius-md); padding: 10px; border: 0.5px solid var(--color-border-tertiary); }
+  .role-card .role-title { font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+  .role-card .role-q { font-size: 11px; color: var(--color-text-secondary); }
+  .insight-row { display: flex; gap: 8px; align-items: flex-start; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .insight-row:last-child { border-bottom: none; }
+  .insight-icon { font-size: 14px; margin-top: 1px; flex-shrink: 0; }
+  .insight-text { font-size: 13px; color: var(--color-text-primary); line-height: 1.5; }
+  .insight-text span { color: var(--color-text-secondary); font-size: 12px; display: block; margin-top: 1px; }
+  .ask-btn { display: inline-block; font-size: 12px; padding: 4px 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; cursor: pointer; color: var(--color-text-secondary); margin-top: 10px; }
+  .ask-btn:hover { background: var(--color-background-secondary); }
+</style>
+
+<div style="padding: 1rem 0 0">
+
+  <!-- Header -->
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+    <div>
+      <div style="font-size:18px; font-weight:500; color:var(--color-text-primary)">Data engineering — learning map</div>
+      <div style="font-size:13px; color:var(--color-text-secondary); margin-top:2px">Day 7 complete · Duplicate data mastered</div>
+    </div>
+    <span class="badge badge-done">7 days done</span>
+  </div>
+
+  <!-- Core concepts learnt -->
+  <div class="section-title">Core concepts you now understand</div>
+  <div class="concept-grid">
+    <div class="concept-box" onclick="sendPrompt('Explain what data is and why companies use it')">
+      <div class="label">What is data</div>
+      <div class="sub">Info for decisions</div>
+    </div>
+    <div class="concept-box" onclick="sendPrompt('How does data help business growth?')">
+      <div class="label">Data in business</div>
+      <div class="sub">Reports + decisions</div>
+    </div>
+    <div class="concept-box" onclick="sendPrompt('What is the difference between numerical and categorical data?')">
+      <div class="label">Types of data</div>
+      <div class="sub">Numerical vs categorical</div>
+    </div>
+    <div class="concept-box" onclick="sendPrompt('Explain table structure — rows and columns')">
+      <div class="label">Table structure</div>
+      <div class="sub">Row = record, col = attribute</div>
+    </div>
+  </div>
+  <div class="concept-grid">
+    <div class="concept-box" onclick="sendPrompt('Explain MCAR, MAR and MNAR missing data types')">
+      <div class="label">Missing data — 3 types</div>
+      <div class="sub">MCAR · MAR · MNAR</div>
+    </div>
+    <div class="concept-box" onclick="sendPrompt('Explain pattern thinking in data')">
+      <div class="label">Pattern thinking</div>
+      <div class="sub">Core analyst skill</div>
+    </div>
+    <div class="concept-box" onclick="sendPrompt('What is duplicate data and what are its types?')">
+      <div class="label">Duplicate data — 3 types</div>
+      <div class="sub">Exact · partial · logic</div>
+    </div>
+    <div class="concept-box" onclick="sendPrompt('What is master data and transaction data?')">
+      <div class="label">Master vs transaction</div>
+      <div class="sub">Zomato order example</div>
+    </div>
+  </div>
+
+  <!-- Deduplication pipeline -->
+  <div class="section-title">Deduplication pipeline — how it works</div>
+  <div class="card">
+    <div class="flow-row">
+      <span class="flow-pill">CRM</span>
+      <span class="flow-arr">+</span>
+      <span class="flow-pill">ERP</span>
+      <span class="flow-arr">+</span>
+      <span class="flow-pill">Mobile</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-pill highlight">Step 1 — Exact match</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-pill highlight">Step 2 — Fuzzy match</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-pill highlight">Step 3 — Partial match</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-pill">Clean warehouse</span>
+    </div>
+    <div style="font-size:12px; color:var(--color-text-secondary); margin-top:6px">
+      Exact → auto reject &nbsp;·&nbsp; Fuzzy → score-based reject &nbsp;·&nbsp; Partial → human review flag
+    </div>
+  </div>
+
+  <!-- Key insights from your questions -->
+  <div class="section-title">Key insights from your own questions</div>
+  <div class="card">
+    <div class="insight-row">
+      <div class="insight-icon">💡</div>
+      <div class="insight-text">Primary key stops duplicates inside one database — not across multiple systems.
+        <span>Your question about primary key coverage</span></div>
+    </div>
+    <div class="insight-row">
+      <div class="insight-icon">💡</div>
+      <div class="insight-text">MAR vs MNAR looks the same from outside — difference is whether evidence is visible in your data.
+        <span>Your best question of Day 6</span></div>
+    </div>
+    <div class="insight-row">
+      <div class="insight-icon">💡</div>
+      <div class="insight-text">Same chicken order every day is NOT duplicate — different Order ID = different real event.
+        <span>Your Zomato order question</span></div>
+    </div>
+    <div class="insight-row">
+      <div class="insight-icon">💡</div>
+      <div class="insight-text">Phone and email alone cannot identify duplicates — shared numbers, recycled numbers, typos break it.
+        <span>Your unique column question</span></div>
+    </div>
+    <div class="insight-row">
+      <div class="insight-icon">💡</div>
+      <div class="insight-text">Data engineer builds the system once — it runs forever. Analyst should never clean data every day.
+        <span>Chef vs dishwasher analogy</span></div>
+    </div>
+  </div>
+
+  <!-- Three roles -->
+  <div class="section-title">Three data roles — one line each</div>
+  <div class="role-row">
+    <div class="role-card" style="border-color: var(--color-border-info);">
+      <div class="role-title" style="color:var(--color-text-info)">Data analyst</div>
+      <div class="role-q">What happened?</div>
+      <div style="font-size:11px; color:var(--color-text-tertiary); margin-top:4px">Excel · SQL · Power BI</div>
+    </div>
+    <div class="role-card" style="border-color: var(--color-border-success);">
+      <div class="role-title" style="color:var(--color-text-success)">Data engineer</div>
+      <div class="role-q">How to move + clean?</div>
+      <div style="font-size:11px; color:var(--color-text-tertiary); margin-top:4px">Spark · ADF · Python</div>
+    </div>
+    <div class="role-card" style="border-color: var(--color-border-warning);">
+      <div class="role-title" style="color:var(--color-text-warning)">Data scientist</div>
+      <div class="role-q">What will happen?</div>
+      <div style="font-size:11px; color:var(--color-text-tertiary); margin-top:4px">ML · Statistics · Python</div>
+    </div>
+  </div>
+
+  <!-- Zomato real world -->
+  <div class="section-title">Real world — Zomato one click journey</div>
+  <div class="card">
+    <div class="flow-row" style="flex-wrap:wrap;">
+      <span class="flow-pill">Ravi clicks order</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-pill">10+ data points generated</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-pill highlight">Data engineer pipeline runs</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-pill">Duplicate check</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-pill">Clean DB / cloud</span>
+      <span class="flow-arr">→</span>
+      <span class="flow-pill">Analyst + scientist use it</span>
+    </div>
+  </div>
+
+  <!-- One line truths -->
+  <div class="section-title">One line truths to remember</div>
+  <div class="card">
+    <div class="insight-row">
+      <div class="insight-text" style="font-style:italic; color:var(--color-text-secondary)">"Clean data = trustworthy reports = right decisions = business growth."</div>
+    </div>
+    <div class="insight-row">
+      <div class="insight-text" style="font-style:italic; color:var(--color-text-secondary)">"Data engineer builds the road. Analyst reads the map. Scientist predicts where it leads."</div>
+    </div>
+    <div class="insight-row">
+      <div class="insight-text" style="font-style:italic; color:var(--color-text-secondary)">"Human teaches machine once. Machine works forever."</div>
+    </div>
+  </div>
+
+  <button class="ask-btn" onclick="sendPrompt('Start Day 8 — Data Quality Thinking')">Start Day 8 — Data quality thinking ↗</button>
+
+</div>
