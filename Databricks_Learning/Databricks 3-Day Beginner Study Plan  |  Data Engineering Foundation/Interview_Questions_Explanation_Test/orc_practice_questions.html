@@ -1,0 +1,113 @@
+
+<style>
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 10px; }
+.q-num { font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); margin-bottom: 4px; }
+.q-text { font-size: 14px; color: var(--color-text-primary); line-height: 1.6; margin-bottom: 10px; }
+.footer-row { display: flex; align-items: center; justify-content: space-between; }
+.level { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
+.easy { background: var(--color-background-success); color: var(--color-text-success); }
+.medium { background: var(--color-background-warning); color: var(--color-text-warning); }
+.hard { background: var(--color-background-danger); color: var(--color-text-danger); }
+.hint { font-size: 11px; color: var(--color-text-tertiary); }
+.ans-btn { font-size: 12px; padding: 4px 12px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); cursor: pointer; }
+.ans-btn:hover { background: var(--color-background-secondary); }
+.header { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 0.75rem 1.25rem; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+</style>
+
+<div style="padding: 0.5rem 0;">
+
+  <div class="header">
+    <div>
+      <div style="font-size: 14px; font-weight: 500; color: var(--color-text-primary);">ORC format — practice questions</div>
+      <div style="font-size: 12px; color: var(--color-text-tertiary); margin-top: 2px;">Answer in your own words — click button to submit</div>
+    </div>
+    <div style="font-size: 12px; color: var(--color-text-tertiary);">9 questions</div>
+  </div>
+
+  <div class="card">
+    <div class="q-num">Q1 — Basic</div>
+    <div class="q-text">What does ORC stand for and why is it called "Optimized Row Columnar"?</div>
+    <div class="footer-row">
+      <div><span class="level easy">Easy</span> <span class="hint" style="margin-left:8px;">Hint: think columnar + compression</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Q1: ')">Answer Q1 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-num">Q2 — Basic</div>
+    <div class="q-text">What is a stripe in ORC? How many rows does it typically hold and why?</div>
+    <div class="footer-row">
+      <div><span class="level easy">Easy</span> <span class="hint" style="margin-left:8px;">Hint: think MB not rows</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Q2: ')">Answer Q2 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-num">Q3 — Basic</div>
+    <div class="q-text">What is the File Footer in an ORC file? What information does it store?</div>
+    <div class="footer-row">
+      <div><span class="level easy">Easy</span> <span class="hint" style="margin-left:8px;">Hint: think index + read first</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Q3: ')">Answer Q3 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-num">Q4 — Medium</div>
+    <div class="q-text">You run SELECT AVG(salary) FROM employees — how does ORC make this faster compared to a CSV file?</div>
+    <div class="footer-row">
+      <div><span class="level medium">Medium</span> <span class="hint" style="margin-left:8px;">Hint: CSV has no structure</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Q4: ')">Answer Q4 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-num">Q5 — Medium</div>
+    <div class="q-text">What is predicate pushdown in ORC? Give a simple example with a WHERE clause.</div>
+    <div class="footer-row">
+      <div><span class="level medium">Medium</span> <span class="hint" style="margin-left:8px;">Hint: min/max + skip stripes</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Q5: ')">Answer Q5 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-num">Q6 — Medium</div>
+    <div class="q-text">Who controls the stripe size in ORC — is it the system, the ORC format, or the developer? What is the default size?</div>
+    <div class="footer-row">
+      <div><span class="level medium">Medium</span> <span class="hint" style="margin-left:8px;">Hint: ORC sets it, you can override</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Q6: ')">Answer Q6 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-num">Q7 — Hard</div>
+    <div class="q-text">What is the difference between the File Footer and the Stripe Footer in ORC? Why does ORC need both?</div>
+    <div class="footer-row">
+      <div><span class="level hard">Hard</span> <span class="hint" style="margin-left:8px;">Hint: whole file vs one stripe</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Q7: ')">Answer Q7 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-num">Q8 — Hard</div>
+    <div class="q-text">A table has 1 million rows and you query WHERE city = 'Mumbai'. How does ORC use stripe level statistics to avoid reading all the data?</div>
+    <div class="footer-row">
+      <div><span class="level hard">Hard</span> <span class="hint" style="margin-left:8px;">Hint: footer checks each stripe min/max</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Q8: ')">Answer Q8 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-num">Q9 — Hard</div>
+    <div class="q-text">When would you increase the ORC stripe size from 64 MB to 256 MB? What is the trade-off?</div>
+    <div class="footer-row">
+      <div><span class="level hard">Hard</span> <span class="hint" style="margin-left:8px;">Hint: full scan vs filter + parallelism</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Q9: ')">Answer Q9 ↗</button>
+    </div>
+  </div>
+
+  <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 0.75rem 1.25rem; margin-top: 4px; display: flex; justify-content: space-between; align-items: center;">
+    <div style="font-size: 12px; color: var(--color-text-tertiary);">Your last attempt: 74/90 — 82%</div>
+    <div style="font-size: 12px; color: var(--color-text-tertiary);">Target: 85/90 — 94%</div>
+  </div>
+
+</div>
