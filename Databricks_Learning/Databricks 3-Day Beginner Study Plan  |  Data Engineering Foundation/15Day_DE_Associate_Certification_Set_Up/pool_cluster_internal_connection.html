@@ -1,0 +1,189 @@
+
+<style>
+.step-nav { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.step-btn { font-size: 12px; padding: 6px 14px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); cursor: pointer; transition: all 0.2s; }
+.step-btn.active { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+.step-btn:hover { background: var(--color-background-secondary); }
+.panel { display: none; }
+.panel.active { display: block; }
+.box { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 10px; }
+.box-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.box-sub { font-size: 12px; color: var(--color-text-secondary); line-height: 1.6; }
+.arrow-row { text-align: center; font-size: 18px; color: var(--color-text-tertiary); margin: 4px 0; }
+.tag { font-size: 11px; font-weight: 500; padding: 2px 10px; border-radius: 20px; display: inline-block; margin-bottom: 8px; }
+.tag-purple { background: var(--color-background-info); color: var(--color-text-info); }
+.tag-green { background: var(--color-background-success); color: var(--color-text-success); }
+.tag-amber { background: var(--color-background-warning); color: var(--color-text-warning); }
+.tag-red { background: var(--color-background-danger); color: var(--color-text-danger); }
+.tag-teal { background: var(--color-background-success); color: var(--color-text-success); }
+.conn-row { display: flex; align-items: stretch; gap: 8px; margin-bottom: 8px; }
+.conn-box { flex: 1; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 12px; }
+.conn-arrow { display: flex; align-items: center; font-size: 16px; color: var(--color-text-tertiary); padding: 0 2px; }
+.note { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; font-size: 12px; color: var(--color-text-secondary); line-height: 1.7; margin-top: 8px; }
+</style>
+
+<div style="padding: 0.5rem 0;">
+
+<div class="step-nav">
+  <button class="step-btn active" onclick="show(0)">Overview</button>
+  <button class="step-btn" onclick="show(1)">Step 1 — Pool created</button>
+  <button class="step-btn" onclick="show(2)">Step 2 — Cluster created</button>
+  <button class="step-btn" onclick="show(3)">Step 3 — Cluster starts</button>
+  <button class="step-btn" onclick="show(4)">Step 4 — Job runs</button>
+  <button class="step-btn" onclick="show(5)">Step 5 — Terminates</button>
+</div>
+
+<!-- Panel 0: Overview -->
+<div class="panel active" id="p0">
+  <div class="box">
+    <div class="box-title">Who talks to whom — full picture</div>
+    <div class="box-sub" style="margin-top:8px;">
+      <div class="conn-row">
+        <div class="conn-box"><div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px;">Admin</div><div style="font-size:13px;font-weight:500;">Creates &amp; manages pool</div></div>
+        <div class="conn-arrow">→</div>
+        <div class="conn-box"><div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px;">Databricks control plane</div><div style="font-size:13px;font-weight:500;">Registers pool config</div></div>
+        <div class="conn-arrow">→</div>
+        <div class="conn-box"><div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px;">Cloud (AWS/Azure)</div><div style="font-size:13px;font-weight:500;">Pre-starts VMs</div></div>
+      </div>
+      <div class="conn-row">
+        <div class="conn-box"><div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px;">Engineer</div><div style="font-size:13px;font-weight:500;">Creates cluster + attaches pool</div></div>
+        <div class="conn-arrow">→</div>
+        <div class="conn-box"><div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px;">Control plane</div><div style="font-size:13px;font-weight:500;">Finds free VMs in pool</div></div>
+        <div class="conn-arrow">→</div>
+        <div class="conn-box"><div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px;">Cluster</div><div style="font-size:13px;font-weight:500;">Gets VMs instantly</div></div>
+      </div>
+      <div class="conn-row">
+        <div class="conn-box"><div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px;">Cluster</div><div style="font-size:13px;font-weight:500;">Terminates after job</div></div>
+        <div class="conn-arrow">→</div>
+        <div class="conn-box"><div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px;">Control plane</div><div style="font-size:13px;font-weight:500;">Returns VMs to pool</div></div>
+        <div class="conn-arrow">→</div>
+        <div class="conn-box"><div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px;">Pool</div><div style="font-size:13px;font-weight:500;">VMs idle again — ready!</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="note">Click each step above to see exactly what happens inside each connection in detail.</div>
+</div>
+
+<!-- Panel 1: Pool created -->
+<div class="panel" id="p1">
+  <span class="tag tag-purple">Step 1 — Admin creates pool</span>
+  <div class="box">
+    <div class="box-title">Admin → Databricks UI</div>
+    <div class="box-sub">Admin opens Databricks → Compute → Pools → clicks Create Pool. Sets: min 5 machines, machine type, cloud region.</div>
+  </div>
+  <div class="arrow-row">↓</div>
+  <div class="box">
+    <div class="box-title">Databricks UI → Control Plane</div>
+    <div class="box-sub">UI sends pool config to Databricks Control Plane (the brain of Databricks). Control Plane saves pool settings in its internal database.</div>
+  </div>
+  <div class="arrow-row">↓</div>
+  <div class="box">
+    <div class="box-title">Control Plane → Cloud Provider (AWS / Azure / GCP)</div>
+    <div class="box-sub">Control Plane immediately calls Cloud API — "start 5 VMs of this type in this region." Cloud starts the VMs and keeps them running.</div>
+  </div>
+  <div class="arrow-row">↓</div>
+  <div class="box">
+    <div class="box-title">VMs → Pool registry</div>
+    <div class="box-sub">Once VMs are running, Control Plane registers them as "idle" in the pool. They sit and wait — doing nothing, costing money, but saving time!</div>
+  </div>
+  <div class="note">At this point — 5 machines are ON, idle, registered in pool. No cluster yet.</div>
+</div>
+
+<!-- Panel 2: Cluster created -->
+<div class="panel" id="p2">
+  <span class="tag tag-teal">Step 2 — Engineer creates cluster</span>
+  <div class="box">
+    <div class="box-title">Engineer → Databricks UI</div>
+    <div class="box-sub">Engineer goes to Compute → Create Cluster → selects "use pool" → picks the pool Admin created → saves cluster config.</div>
+  </div>
+  <div class="arrow-row">↓</div>
+  <div class="box">
+    <div class="box-title">Databricks UI → Control Plane</div>
+    <div class="box-sub">Control Plane saves cluster config with pool reference attached. Cluster is NOT started yet — just configured. Pool is just linked, not consumed.</div>
+  </div>
+  <div class="note">At this point — cluster config saved. Pool still has all 5 idle machines. Nothing consumed yet.</div>
+</div>
+
+<!-- Panel 3: Cluster starts -->
+<div class="panel" id="p3">
+  <span class="tag tag-green">Step 3 — Cluster starts</span>
+  <div class="box">
+    <div class="box-title">Engineer clicks Start / Job triggers cluster</div>
+    <div class="box-sub">Engineer clicks "Start cluster" or a scheduled job triggers it automatically.</div>
+  </div>
+  <div class="arrow-row">↓</div>
+  <div class="box">
+    <div class="box-title">Control Plane checks pool</div>
+    <div class="box-sub">Control Plane looks at pool registry — "how many idle machines available?" Finds M1, M2, M3, M4, M5 all idle. Cluster needs 3 → takes M1, M2, M3.</div>
+  </div>
+  <div class="arrow-row">↓</div>
+  <div class="box">
+    <div class="box-title">Control Plane → M1, M2, M3</div>
+    <div class="box-sub">Sends Spark install command to M1, M2, M3. Since VMs are already running — Spark installs in seconds. Driver starts on M1. M2, M3 become workers.</div>
+  </div>
+  <div class="arrow-row">↓</div>
+  <div class="box">
+    <div class="box-title">Driver (M1) → Workers (M2, M3)</div>
+    <div class="box-sub">Driver registers workers. Cluster is fully READY. M4 and M5 stay idle in pool — available for another cluster.</div>
+  </div>
+  <div class="note">Total time = 30 seconds. Without pool this same step takes 5 to 7 minutes!</div>
+</div>
+
+<!-- Panel 4: Job runs -->
+<div class="panel" id="p4">
+  <span class="tag tag-amber">Step 4 — Job runs</span>
+  <div class="box">
+    <div class="box-title">Engineer → Notebook / Job</div>
+    <div class="box-sub">Engineer runs a notebook or scheduled job. Code like df.read.format("orc") or SELECT AVG(salary) is submitted to the cluster.</div>
+  </div>
+  <div class="arrow-row">↓</div>
+  <div class="box">
+    <div class="box-title">Driver (M1) → Spark engine</div>
+    <div class="box-sub">Driver receives the query. Spark engine on Driver creates an execution plan — decides how to split work across workers.</div>
+  </div>
+  <div class="arrow-row">↓</div>
+  <div class="box">
+    <div class="box-title">Driver → Workers (M2, M3)</div>
+    <div class="box-sub">Driver sends tasks to M2 and M3. Each worker reads its assigned data partition from Databricks storage (DBFS / Delta / ORC files).</div>
+  </div>
+  <div class="arrow-row">↓</div>
+  <div class="box">
+    <div class="box-title">Workers → Driver — results back</div>
+    <div class="box-sub">Workers process data and send results back to Driver. Driver combines results and returns final output to Engineer's notebook.</div>
+  </div>
+  <div class="note">During this whole time — M4 and M5 are still sitting idle in pool, ready for another engineer's cluster!</div>
+</div>
+
+<!-- Panel 5: Terminates -->
+<div class="panel" id="p5">
+  <span class="tag tag-red">Step 5 — Cluster terminates</span>
+  <div class="box">
+    <div class="box-title">Job finishes or timeout hits</div>
+    <div class="box-sub">Job completes OR auto-termination kicks in (e.g. idle for 30 mins). Cluster shutdown is triggered.</div>
+  </div>
+  <div class="arrow-row">↓</div>
+  <div class="box">
+    <div class="box-title">Control Plane → M1, M2, M3</div>
+    <div class="box-sub">Control Plane sends "stop Spark" command to M1, M2, M3. Spark processes shut down. But the VMs themselves are NOT terminated — just cleaned up.</div>
+  </div>
+  <div class="arrow-row">↓</div>
+  <div class="box">
+    <div class="box-title">M1, M2, M3 → Pool registry</div>
+    <div class="box-sub">Control Plane marks M1, M2, M3 as "idle" again in the pool registry. Now pool has all 5 machines idle again — M1 M2 M3 M4 M5.</div>
+  </div>
+  <div class="arrow-row">↓</div>
+  <div class="box">
+    <div class="box-title">Pool — fully restored</div>
+    <div class="box-sub">Next cluster that starts will again get machines from pool instantly. The cycle repeats — no cloud provisioning needed!</div>
+  </div>
+  <div class="note">VMs are never deleted — only returned. This is the whole magic of pools. Cloud cost continues for idle VMs but cluster start time = nearly zero.</div>
+</div>
+
+</div>
+
+<script>
+function show(n) {
+  document.querySelectorAll('.panel').forEach((p,i) => p.classList.toggle('active', i===n));
+  document.querySelectorAll('.step-btn').forEach((b,i) => b.classList.toggle('active', i===n));
+}
+</script>
