@@ -1,0 +1,164 @@
+
+<style>
+.step-nav { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.step-btn { font-size: 12px; padding: 6px 14px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); cursor: pointer; }
+.step-btn.active { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+.step-btn:hover { background: var(--color-background-secondary); }
+.panel { display: none; }
+.panel.active { display: block; }
+.box { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 10px; }
+.box-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+.box-sub { font-size: 13px; color: var(--color-text-secondary); line-height: 1.8; }
+.row { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--color-text-primary); line-height: 1.8; margin-bottom: 4px; }
+.tick { color: var(--color-text-success); font-weight: 500; min-width: 16px; }
+.cross { color: var(--color-text-danger); font-weight: 500; min-width: 16px; }
+.note { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; font-size: 13px; color: var(--color-text-secondary); line-height: 1.7; margin-top: 8px; }
+.tag { font-size: 11px; font-weight: 500; padding: 3px 12px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+.tblue { background: var(--color-background-info); color: var(--color-text-info); }
+.tgreen { background: var(--color-background-success); color: var(--color-text-success); }
+.tred { background: var(--color-background-danger); color: var(--color-text-danger); }
+.tamb { background: var(--color-background-warning); color: var(--color-text-warning); }
+.year { font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.grid2 { display: flex; gap: 10px; margin-bottom: 10px; }
+.g-box { flex: 1; border-radius: var(--border-radius-md); padding: 12px 14px; font-size: 13px; line-height: 1.8; border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); }
+</style>
+
+<div style="padding: 0.5rem 0;">
+<div class="step-nav">
+  <button class="step-btn active" onclick="show(0)">1990s — Warehouse</button>
+  <button class="step-btn" onclick="show(1)">2010s — Data Lake</button>
+  <button class="step-btn" onclick="show(2)">2016 — Databricks chaos</button>
+  <button class="step-btn" onclick="show(3)">2019 — Delta Lake</button>
+  <button class="step-btn" onclick="show(4)">2021 — Lakehouse</button>
+  <button class="step-btn" onclick="show(5)">2022 — Unity Catalog</button>
+</div>
+
+<!-- Panel 0: Data Warehouse -->
+<div class="panel active" id="p0">
+  <div class="year">1990s — 2010s</div>
+  <span class="tag tblue">Era 1 — Data Warehouse</span>
+  <div class="box">
+    <div class="box-title">What existed</div>
+    <div class="box-sub">Companies used Oracle, SQL Server, Teradata. Structured data only. One central database. IT team controlled everything. Very expensive — cost crores per year.</div>
+  </div>
+  <div class="grid2">
+    <div class="g-box">
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-success);margin-bottom:6px;">What was good</div>
+      <div class="row"><span class="tick">✓</span>One place for all data</div>
+      <div class="row"><span class="tick">✓</span>Very structured and organised</div>
+      <div class="row"><span class="tick">✓</span>Access control existed</div>
+    </div>
+    <div class="g-box">
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-danger);margin-bottom:6px;">What was bad</div>
+      <div class="row"><span class="cross">✗</span>Only structured data — no images, JSON, logs</div>
+      <div class="row"><span class="cross">✗</span>Extremely expensive</div>
+      <div class="row"><span class="cross">✗</span>Cannot scale for big data</div>
+    </div>
+  </div>
+  <div class="note">Storage problem did NOT exist in warehouse era — because IT controlled everything strictly. Only one database, one team managing it.</div>
+</div>
+
+<!-- Panel 1: Data Lake -->
+<div class="panel" id="p1">
+  <div class="year">2010 — 2016</div>
+  <span class="tag tamb">Era 2 — Data Lake (THIS is when chaos started!)</span>
+  <div class="box">
+    <div class="box-title">What happened</div>
+    <div class="box-sub">AWS launched S3 in 2006. Companies realized — store EVERYTHING cheaply on S3! Images, JSON, logs, CSVs, videos — all dumped into S3. This was the Data Lake idea. No structure, no rules, just dump and store.</div>
+  </div>
+  <div class="box">
+    <div class="box-title">THIS is exactly when "data everywhere" chaos started!</div>
+    <div class="row"><span class="cross">✗</span>Engineer 1 dumps files in s3://company/raw/2021/</div>
+    <div class="row"><span class="cross">✗</span>Engineer 2 dumps files in s3://company/data/new/</div>
+    <div class="row"><span class="cross">✗</span>Engineer 3 creates a new bucket s3://company-data-2/</div>
+    <div class="row"><span class="cross">✗</span>No naming convention, no governance, no access control</div>
+    <div class="row"><span class="cross">✗</span>6 months later — nobody knows where anything is!</div>
+  </div>
+  <div class="note">Data Lake gave freedom — but too much freedom became chaos. S3 was cheap so everyone dumped data everywhere. This is why they called it "Data Swamp" not Data Lake!</div>
+</div>
+
+<!-- Panel 2: Databricks chaos -->
+<div class="panel" id="p2">
+  <div class="year">2013 — 2021</div>
+  <span class="tag tred">Era 2.5 — Databricks launched but no storage standard</span>
+  <div class="box">
+    <div class="box-title">Databricks launched on top of this chaotic Data Lake</div>
+    <div class="box-sub">Databricks was built to process the messy Data Lake data using Spark. But engineers using Databricks had no clear standard for WHERE to save their processed output. So they used whatever was convenient.</div>
+  </div>
+  <div class="box">
+    <div class="box-title">What engineers did — and what went wrong</div>
+    <div class="row"><span class="cross">✗</span>Some saved to cluster disk — data lost when cluster stopped</div>
+    <div class="row"><span class="cross">✗</span>Some saved to DBFS — no security, anyone could see anything</div>
+    <div class="row"><span class="cross">✗</span>Some saved to workspace files — hit 500MB limit on big data</div>
+    <div class="row"><span class="cross">✗</span>Some saved directly to S3 — no tracking, no governance</div>
+    <div class="row"><span class="cross">✗</span>Result — processed data was as chaotic as raw data!</div>
+  </div>
+  <div class="note">Your question was perfect — YES this chaos happened DURING the Data Lake era, not before or after. Data Lake created freedom. Freedom created mess. Databricks inherited that mess.</div>
+</div>
+
+<!-- Panel 3: Delta Lake -->
+<div class="panel" id="p3">
+  <div class="year">2019</div>
+  <span class="tag tblue">Era 3 — Delta Lake (partial solution)</span>
+  <div class="box">
+    <div class="box-title">What Delta Lake solved</div>
+    <div class="box-sub">Databricks created Delta Lake in 2019. It added ACID transactions on top of S3 — so data was reliable and not corrupted. But Delta Lake solved DATA QUALITY — not the storage chaos problem. Engineers still saved files wherever they wanted.</div>
+  </div>
+  <div class="grid2">
+    <div class="g-box">
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-success);margin-bottom:6px;">Delta Lake solved</div>
+      <div class="row"><span class="tick">✓</span>Data corruption — ACID transactions</div>
+      <div class="row"><span class="tick">✓</span>Data reliability — no partial writes</div>
+      <div class="row"><span class="tick">✓</span>Time travel — rollback bad changes</div>
+    </div>
+    <div class="g-box">
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-danger);margin-bottom:6px;">Delta Lake did NOT solve</div>
+      <div class="row"><span class="cross">✗</span>Where to store files — still scattered</div>
+      <div class="row"><span class="cross">✗</span>Who can access what — no governance</div>
+      <div class="row"><span class="cross">✗</span>Audit trail — still missing</div>
+    </div>
+  </div>
+  <div class="note">Delta Lake = data is now reliable. But storage is still chaotic. You have clean data — but nobody knows where it is or who can see it!</div>
+</div>
+
+<!-- Panel 4: Lakehouse -->
+<div class="panel" id="p4">
+  <div class="year">2021</div>
+  <span class="tag tblue">Era 4 — Lakehouse (architecture solution)</span>
+  <div class="box">
+    <div class="box-title">What Lakehouse solved</div>
+    <div class="box-sub">Databricks coined "Lakehouse" — combine the reliability of Data Warehouse with the flexibility of Data Lake. Delta Lake + Spark + one platform = Lakehouse. But storage governance was STILL not fully solved. Engineers still had multiple storage options and no clear rule.</div>
+  </div>
+  <div class="box">
+    <div class="box-title">The remaining problem</div>
+    <div class="box-sub">Lakehouse told you HOW to process data — Bronze, Silver, Gold layers. But it still did not tell every engineer WHERE exactly to save files and HOW to control who sees what. The slide you saw lists all the options that existed — and the confusion they caused.</div>
+  </div>
+  <div class="note">Lakehouse = great architecture. But the STORAGE GOVERNANCE problem was still not 100% solved. That is what Unity Catalog came to fix.</div>
+</div>
+
+<!-- Panel 5: Unity Catalog -->
+<div class="panel" id="p5">
+  <div class="year">2022 — Today</div>
+  <span class="tag tgreen">Era 5 — Unity Catalog (final solution!)</span>
+  <div class="box">
+    <div class="box-title">What Unity Catalog finally solved</div>
+    <div class="box-sub">Unity Catalog launched in 2022. It gave ONE answer to every storage question — use Volumes. It brought governance, security, audit trail, and access control in one place. Now every engineer in every company has one clear rule: store in Unity Catalog Volumes.</div>
+  </div>
+  <div class="box">
+    <div class="box-title">Complete problem → solution journey</div>
+    <div class="row"><span class="tick">✓</span>Data Lake chaos (2010) → Lakehouse architecture (2021)</div>
+    <div class="row"><span class="tick">✓</span>Data corruption (2013) → Delta Lake ACID (2019)</div>
+    <div class="row"><span class="tick">✓</span>Storage chaos (2013-2021) → Unity Catalog Volumes (2022)</div>
+    <div class="row"><span class="tick">✓</span>No governance → Unity Catalog fine-grained access control</div>
+    <div class="row"><span class="tick">✓</span>No audit trail → Unity Catalog logs every read and write</div>
+  </div>
+  <div class="note">So your original understanding was correct — in a properly set up Lakehouse TODAY, data lives in S3/ADLS accessed through Unity Catalog Volumes. The chaos happened DURING the transition from Data Lake to Lakehouse between 2013 and 2022.</div>
+</div>
+
+</div>
+<script>
+function show(n) {
+  document.querySelectorAll('.panel').forEach((p,i) => p.classList.toggle('active', i===n));
+  document.querySelectorAll('.step-btn').forEach((b,i) => b.classList.toggle('active', i===n));
+}
+</script>

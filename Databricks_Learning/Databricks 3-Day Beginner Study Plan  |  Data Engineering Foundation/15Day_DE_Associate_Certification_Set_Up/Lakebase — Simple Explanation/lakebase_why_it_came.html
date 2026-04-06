@@ -1,0 +1,207 @@
+
+<style>
+.step-nav { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.step-btn { font-size: 12px; padding: 6px 14px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); cursor: pointer; }
+.step-btn.active { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+.step-btn:hover { background: var(--color-background-secondary); }
+.panel { display: none; }
+.panel.active { display: block; }
+.box { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 10px; }
+.box-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+.box-sub { font-size: 13px; color: var(--color-text-secondary); line-height: 1.8; }
+.row { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--color-text-primary); line-height: 1.8; margin-bottom: 4px; }
+.tick { color: var(--color-text-success); font-weight: 500; min-width: 16px; }
+.cross { color: var(--color-text-danger); font-weight: 500; min-width: 16px; }
+.note { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; font-size: 13px; color: var(--color-text-secondary); line-height: 1.7; margin-top: 8px; }
+.tag { font-size: 11px; font-weight: 500; padding: 3px 12px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+.tred { background: var(--color-background-danger); color: var(--color-text-danger); }
+.tgreen { background: var(--color-background-success); color: var(--color-text-success); }
+.tamb { background: var(--color-background-warning); color: var(--color-text-warning); }
+.tblue { background: var(--color-background-info); color: var(--color-text-info); }
+.grid2 { display: flex; gap: 10px; margin-bottom: 10px; }
+.g-box { flex: 1; border-radius: var(--border-radius-md); padding: 12px 14px; font-size: 13px; line-height: 1.8; border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); }
+.bad { border-left: 3px solid var(--color-border-danger) !important; }
+.good { border-left: 3px solid var(--color-border-success) !important; }
+.code { font-family: var(--font-mono); font-size: 12px; background: var(--color-background-secondary); padding: 10px 14px; border-radius: var(--border-radius-md); line-height: 2; margin: 8px 0; color: var(--color-text-primary); }
+</style>
+
+<div style="padding: 0.5rem 0;">
+<div class="step-nav">
+  <button class="step-btn active" onclick="show(0)">The 2 worlds problem</button>
+  <button class="step-btn" onclick="show(1)">Problem 1 — ETL pain</button>
+  <button class="step-btn" onclick="show(2)">Problem 2 — Stale data</button>
+  <button class="step-btn" onclick="show(3)">Problem 3 — AI agents</button>
+  <button class="step-btn" onclick="show(4)">Lakebase solution</button>
+  <button class="step-btn" onclick="show(5)">Real example</button>
+</div>
+
+<!-- Panel 0: Two worlds -->
+<div class="panel active" id="p0">
+  <span class="tag tred">The Core Problem</span>
+  <div class="box">
+    <div class="box-title">Since 1990s — every company had TWO completely separate systems</div>
+    <div class="grid2">
+      <div class="g-box bad">
+        <div style="font-size:12px;font-weight:500;color:var(--color-text-danger);margin-bottom:8px;">OLTP — Operational Database</div>
+        <div class="row"><span>📦</span>PostgreSQL, MySQL, SQL Server</div>
+        <div class="row"><span>📦</span>Handles live transactions</div>
+        <div class="row"><span>📦</span>Customer places order → saved here</div>
+        <div class="row"><span>📦</span>Fast reads and writes</div>
+        <div class="row"><span>📦</span>Small data — millions of rows</div>
+      </div>
+      <div class="g-box bad">
+        <div style="font-size:12px;font-weight:500;color:var(--color-text-danger);margin-bottom:8px;">OLAP — Analytics Platform</div>
+        <div class="row"><span>📊</span>Databricks, Snowflake, Redshift</div>
+        <div class="row"><span>📊</span>Handles analysis and ML</div>
+        <div class="row"><span>📊</span>Reports, dashboards, AI models</div>
+        <div class="row"><span>📊</span>Slow writes but fast big queries</div>
+        <div class="row"><span>📊</span>Big data — billions of rows</div>
+      </div>
+    </div>
+  </div>
+  <div class="box">
+    <div class="box-title">The problem — these two worlds NEVER talked directly</div>
+    <div class="code">
+      Customer places order (PostgreSQL)<br/>
+              ↓<br/>
+      ETL pipeline runs every 4 hours<br/>
+              ↓<br/>
+      Data lands in Databricks Lakehouse<br/>
+              ↓<br/>
+      AI model sees data — but it is 4 hours OLD!
+    </div>
+  </div>
+  <div class="note">Every company in the world had this problem. Two separate teams, two separate bills, two separate systems. And data was always delayed between them.</div>
+</div>
+
+<!-- Panel 1: ETL pain -->
+<div class="panel" id="p1">
+  <span class="tag tred">Problem 1 — ETL Pipeline Pain</span>
+  <div class="box">
+    <div class="box-title">What is ETL?</div>
+    <div class="box-sub">ETL = Extract, Transform, Load. A pipeline that copies data from operational DB (PostgreSQL) to analytics platform (Databricks) on a schedule — every hour, every night, every few hours.</div>
+  </div>
+  <div class="box">
+    <div class="box-title">Why ETL was a nightmare</div>
+    <div class="row"><span class="cross">✗</span><strong>Complex to build</strong> — a single ETL pipeline takes weeks to develop and test</div>
+    <div class="row"><span class="cross">✗</span><strong>Expensive to run</strong> — separate servers, separate team to maintain it 24/7</div>
+    <div class="row"><span class="cross">✗</span><strong>Breaks frequently</strong> — source DB changes schema → ETL breaks → data stops flowing</div>
+    <div class="row"><span class="cross">✗</span><strong>Multiple pipelines</strong> — one company may have 50+ ETL pipelines for different tables</div>
+    <div class="row"><span class="cross">✗</span><strong>Duplicate data</strong> — same data stored in PostgreSQL AND Databricks — pay twice for storage</div>
+  </div>
+  <div class="box">
+    <div class="box-title">Real cost at a company</div>
+    <div class="box-sub">A mid-size company with 20 ETL pipelines — 2 engineers full time just maintaining pipelines. Salary cost alone = 50 lakhs per year. Plus server costs. Plus the risk of pipeline failures causing wrong data in reports.</div>
+  </div>
+  <div class="note">Lakebase solution: No ETL needed at all. Lakebase sits INSIDE Databricks — data is already there. No copy, no pipeline, no duplicate storage.</div>
+</div>
+
+<!-- Panel 2: Stale data -->
+<div class="panel" id="p2">
+  <span class="tag tred">Problem 2 — Stale Data in Analytics</span>
+  <div class="box">
+    <div class="box-title">The freshness problem</div>
+    <div class="box-sub">Because ETL runs on a schedule — every 1 hour or every night — your analytics platform always shows OLD data. This is called stale data. For most reports this was fine. But for AI — this is a serious problem.</div>
+  </div>
+  <div class="box">
+    <div class="box-title">Real scenarios where stale data causes problems</div>
+    <div class="row"><span class="cross">✗</span>Customer complains about order — AI chatbot says "order placed" but ETL hasn't run yet — Databricks shows nothing</div>
+    <div class="row"><span class="cross">✗</span>Stock price drops suddenly — ML model using 4-hour-old data recommends buying — wrong decision</div>
+    <div class="row"><span class="cross">✗</span>Fraud detection — transaction happens now — model trained on old data — fraud not caught in time</div>
+    <div class="row"><span class="cross">✗</span>Hospital patient admitted — AI model sees old vitals — misses critical change that happened 2 hours ago</div>
+  </div>
+  <div class="note">Lakebase solution: Data is written to Lakebase (inside Databricks) in real time. AI model always sees fresh data — not hours-old data. No ETL delay.</div>
+</div>
+
+<!-- Panel 3: AI agents -->
+<div class="panel" id="p3">
+  <span class="tag tamb">Problem 3 — AI Agents Need Something New</span>
+  <div class="box">
+    <div class="box-title">What is an AI agent?</div>
+    <div class="box-sub">An AI agent is an automated AI system that takes actions on its own — like a robot that reads emails, makes decisions, and updates records automatically. In 2024-2025, every company started building AI agents. And agents created a NEW problem.</div>
+  </div>
+  <div class="box">
+    <div class="box-title">Why AI agents broke the old architecture</div>
+    <div class="row"><span class="cross">✗</span><strong>Agents need memory</strong> — they must remember what they did previously. Old DB = slow for this</div>
+    <div class="row"><span class="cross">✗</span><strong>Agents need speed</strong> — must read and write in milliseconds. ETL takes hours</div>
+    <div class="row"><span class="cross">✗</span><strong>Agents need fresh data</strong> — cannot make decisions on 4-hour-old data</div>
+    <div class="row"><span class="cross">✗</span><strong>Agents need scale</strong> — 1000 agents running simultaneously — old DB cannot handle it</div>
+    <div class="row"><span class="cross">✗</span><strong>Agents need governance</strong> — who did what, when, why — need audit trail</div>
+  </div>
+  <div class="note">Old PostgreSQL was built in 1980s architecture — designed for humans using apps slowly. AI agents are 1000x faster and need a completely different database. Lakebase is built for this.</div>
+</div>
+
+<!-- Panel 4: Solution -->
+<div class="panel" id="p4">
+  <span class="tag tgreen">Lakebase Solution — One Platform for Everything</span>
+  <div class="box">
+    <div class="box-title">What Lakebase gives you</div>
+    <div class="row"><span class="tick">✓</span><strong>Postgres inside Databricks</strong> — familiar SQL, but now inside your analytics platform</div>
+    <div class="row"><span class="tick">✓</span><strong>No ETL needed</strong> — app writes to Lakebase → instantly available in Lakehouse</div>
+    <div class="row"><span class="tick">✓</span><strong>Real time</strong> — data fresh in milliseconds, not hours</div>
+    <div class="row"><span class="tick">✓</span><strong>Serverless + autoscaling</strong> — scales to zero when idle, scales up in seconds when needed</div>
+    <div class="row"><span class="tick">✓</span><strong>Branching</strong> — copy your database in seconds for testing — like git branch for data</div>
+    <div class="row"><span class="tick">✓</span><strong>Unity Catalog</strong> — full governance, security, audit trail built in</div>
+    <div class="row"><span class="tick">✓</span><strong>AI ready</strong> — agents can read and write at millisecond speed</div>
+  </div>
+  <div class="box">
+    <div class="box-title">The architecture shift</div>
+    <div class="code">
+      OLD: App → PostgreSQL → ETL → Databricks → AI<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↑ 4 hours delay here<br/><br/>
+      NEW: App → Lakebase (inside Databricks) → AI<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↑ 0 delay — same platform!
+    </div>
+  </div>
+  <div class="note">Lakebase did not replace Databricks. It ADDED a transactional layer to Databricks. Now Databricks handles everything — transactions + analytics + AI — in one platform.</div>
+</div>
+
+<!-- Panel 5: Real example -->
+<div class="panel" id="p5">
+  <span class="tag tblue">Real Example — Swiggy style food delivery app</span>
+  <div class="box">
+    <div class="box-title">Without Lakebase</div>
+    <div class="code">
+      Customer places order → saved in PostgreSQL<br/>
+              ↓  (ETL runs every 1 hour)<br/>
+      Databricks gets order data<br/>
+              ↓<br/>
+      AI recommends restaurant — but using 1 hour old order data<br/>
+              ↓<br/>
+      Recommends a restaurant that is already fully booked!
+    </div>
+  </div>
+  <div class="box">
+    <div class="box-title">With Lakebase</div>
+    <div class="code">
+      Customer places order → saved in Lakebase (inside Databricks)<br/>
+              ↓  (instant — no ETL)<br/>
+      AI sees order immediately — real time<br/>
+              ↓<br/>
+      Recommends restaurant based on live availability<br/>
+              ↓<br/>
+      Perfect recommendation every time!
+    </div>
+  </div>
+  <div class="box">
+    <div class="box-title">Your MFT pipeline with Lakebase</div>
+    <div class="code">
+      ZIP arrives → processed → stored in Volume<br/>
+              ↓<br/>
+      Lakebase tracks: which files processed, status, errors<br/>
+              ↓<br/>
+      AI agent monitors: auto-retry failed files, alert on anomalies<br/>
+              ↓<br/>
+      Manager dashboard: real-time file processing status
+    </div>
+  </div>
+  <div class="note">Lakebase is Generally Available from February 2026 — right now, today! This is cutting edge technology you are learning about on the day it launched!</div>
+</div>
+
+</div>
+<script>
+function show(n) {
+  document.querySelectorAll('.panel').forEach((p,i) => p.classList.toggle('active', i===n));
+  document.querySelectorAll('.step-btn').forEach((b,i) => b.classList.toggle('active', i===n));
+}
+</script>
