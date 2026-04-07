@@ -1,0 +1,116 @@
+
+<style>
+.step-btn { cursor:pointer; padding:8px 20px; border-radius:var(--border-radius-md); border:0.5px solid var(--color-border-secondary); background:transparent; color:var(--color-text-primary); font-size:14px; }
+.step-btn:hover { background:var(--color-background-secondary); }
+.step-btn:disabled { opacity:0.3; cursor:default; }
+.pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:500; }
+.card { background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:1.25rem; margin-bottom:1rem; }
+</style>
+
+<div id="stepper" style="padding:1rem 0">
+  <div style="display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap" id="dots"></div>
+  <div id="content"></div>
+  <div style="display:flex;gap:10px;margin-top:1.5rem">
+    <button class="step-btn" id="prev" onclick="go(-1)">← Back</button>
+    <button class="step-btn" id="next" onclick="go(1)">Next →</button>
+  </div>
+</div>
+
+<script>
+const steps = [
+  {
+    title: "Imagine your company has a lot of data",
+    body: "Sales numbers. Customer records. Product info. Website logs. ML models. It's everywhere — different teams, different files, different systems.",
+    visual: `<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:1rem 0">
+      ${[["Sales team","Spreadsheets in Drive"],["Data team","Tables in S3"],["ML team","Model files"],["Finance","Reports & exports"]].map(([t,s])=>`<div class="card" style="margin:0"><div style="font-size:14px;font-weight:500;color:var(--color-text-primary)">${t}</div><div style="font-size:12px;color:var(--color-text-secondary);margin-top:4px">${s}</div></div>`).join('')}
+    </div>`,
+    problem: "Problem: Nobody knows what data exists, who can see it, or where it came from."
+  },
+  {
+    title: "The old way: every workspace is an island",
+    body: "Before Unity Catalog, each Databricks workspace had its own separate list of tables. Team A couldn't see Team B's data. No central control. No shared rules.",
+    visual: `<div style="display:flex;gap:10px;margin:1rem 0;flex-wrap:wrap">
+      ${[["Workspace A","Marketing data","#E1F5EE","#0F6E56"],["Workspace B","Sales data","#E6F1FB","#185FA5"],["Workspace C","ML models","#FAEEDA","#854F0B"]].map(([w,d,bg,tc])=>`<div style="flex:1;min-width:120px;background:${bg};border-radius:var(--border-radius-md);padding:12px;border:0.5px solid ${tc}30"><div style="font-size:13px;font-weight:500;color:${tc}">${w}</div><div style="font-size:12px;color:${tc};margin-top:4px;opacity:.8">${d}</div><div style="font-size:11px;margin-top:8px;color:${tc};opacity:.6">isolated silo</div></div>`).join('')}
+    </div>`,
+    problem: "Problem: Data is siloed. Sharing is painful. Nobody knows who has access to what."
+  },
+  {
+    title: "Unity Catalog = one control center for everything",
+    body: "Unity Catalog sits above all your workspaces. It's like a single reception desk for your entire data building — every team checks in here.",
+    visual: `<div style="margin:1rem 0">
+      <div style="background:var(--color-background-info);border:1.5px solid var(--color-border-info);border-radius:var(--border-radius-lg);padding:16px;text-align:center;margin-bottom:10px">
+        <div style="font-size:15px;font-weight:500;color:var(--color-text-info)">Unity Catalog</div>
+        <div style="font-size:12px;color:var(--color-text-info);margin-top:4px">One place to govern all data</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        ${["Workspace A","Workspace B","Workspace C"].map(w=>`<div style="flex:1;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px;text-align:center;font-size:12px;color:var(--color-text-secondary)">${w}</div>`).join('')}
+      </div>
+    </div>`,
+    problem: "Now all workspaces share the same catalog. One set of rules, one view of all data."
+  },
+  {
+    title: "It organizes data in 3 simple levels",
+    body: "Think of it like a filing cabinet: the cabinet itself (Catalog), the drawers inside (Schema), and the folders in each drawer (Tables/Files).",
+    visual: `<div style="margin:1rem 0">
+      ${[
+        ["Catalog","catalog_name","e.g. marketing, finance, product","#E1F5EE","#0F6E56"],
+        ["Schema","catalog.schema_name","e.g. raw, cleaned, reports","#E6F1FB","#185FA5"],
+        ["Table / View / Volume","catalog.schema.table","The actual data","#FAEEDA","#854F0B"]
+      ].map(([level,example,desc,bg,tc],i)=>`
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:20px;height:20px;border-radius:50%;background:${bg};border:1px solid ${tc};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:${tc};flex-shrink:0">${i+1}</div>
+          <div style="background:${bg};border:0.5px solid ${tc}40;border-radius:var(--border-radius-md);padding:10px 14px;flex:1">
+            <div style="font-size:13px;font-weight:500;color:${tc}">${level}</div>
+            <div style="font-size:11px;color:${tc};font-family:var(--font-mono);margin:2px 0">${example}</div>
+            <div style="font-size:11px;color:${tc};opacity:.7">${desc}</div>
+          </div>
+        </div>`).join('')}
+    </div>`,
+    problem: "You refer to any table like: marketing.reports.sales_2024"
+  },
+  {
+    title: "It answers 4 important questions automatically",
+    body: "This is the real value. Unity Catalog tracks everything so you don't have to.",
+    visual: `<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:1rem 0">
+      ${[
+        ["Who can see this?","Access control — set once, applies everywhere"],
+        ["Where did it come from?","Lineage — tracks every transformation"],
+        ["Who accessed it?","Audit log — every query is recorded"],
+        ["What data exists?","Discovery — search and find any dataset"]
+      ].map(([q,a])=>`<div class="card" style="margin:0"><div style="font-size:13px;font-weight:500;color:var(--color-text-primary)">${q}</div><div style="font-size:12px;color:var(--color-text-secondary);margin-top:4px">${a}</div></div>`).join('')}
+    </div>`,
+    problem: "One tool. All four answered. No manual work."
+  },
+  {
+    title: "In one sentence",
+    body: "",
+    visual: `<div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:2rem;text-align:center;margin:1rem 0">
+      <div style="font-size:18px;font-weight:500;color:var(--color-text-primary);line-height:1.6">Unity Catalog is the <span style="color:var(--color-text-info)">single place</span> where your company decides<br><span style="color:var(--color-text-info)">who sees what data</span>, tracks <span style="color:var(--color-text-success)">where it came from</span>,<br>and makes it <span style="color:var(--color-text-warning)">easy to find</span>.</div>
+    </div>
+    <div style="text-align:center">
+      <button class="step-btn" onclick="sendPrompt('Can you show me a real example of Unity Catalog in action with sample data?')">See a real example ↗</button>
+    </div>`,
+    problem: ""
+  }
+];
+
+let current = 0;
+
+function render() {
+  const s = steps[current];
+  document.getElementById('content').innerHTML = `
+    <div style="margin-bottom:6px;font-size:12px;color:var(--color-text-tertiary)">Step ${current+1} of ${steps.length}</div>
+    <div style="font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:10px">${s.title}</div>
+    <div style="font-size:14px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:4px">${s.body}</div>
+    ${s.visual}
+    ${s.problem ? `<div style="font-size:13px;color:var(--color-text-warning);margin-top:4px;padding:8px 12px;background:var(--color-background-warning);border-radius:var(--border-radius-md)">${s.problem}</div>` : ''}
+  `;
+  const dots = document.getElementById('dots');
+  dots.innerHTML = steps.map((_,i)=>`<div style="width:8px;height:8px;border-radius:50%;background:${i===current?'var(--color-text-info)':'var(--color-border-secondary)'};transition:background .2s"></div>`).join('');
+  document.getElementById('prev').disabled = current === 0;
+  document.getElementById('next').disabled = current === steps.length - 1;
+}
+
+function go(dir) { current = Math.max(0, Math.min(steps.length-1, current+dir)); render(); }
+render();
+</script>
