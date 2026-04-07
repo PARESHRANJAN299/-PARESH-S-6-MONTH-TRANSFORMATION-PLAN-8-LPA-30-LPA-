@@ -1,0 +1,207 @@
+
+<style>
+.step-btn { cursor:pointer; padding:8px 20px; border-radius:var(--border-radius-md); border:0.5px solid var(--color-border-secondary); background:transparent; color:var(--color-text-primary); font-size:14px; }
+.step-btn:hover { background:var(--color-background-secondary); }
+.step-btn:disabled { opacity:0.3; cursor:default; }
+.card { background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:1rem 1.25rem; margin-bottom:10px; }
+.badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:500; }
+.code { font-family:var(--font-mono); font-size:12px; background:var(--color-background-secondary); padding:10px 14px; border-radius:var(--border-radius-md); border:0.5px solid var(--color-border-tertiary); margin:8px 0; line-height:1.8; color:var(--color-text-primary); }
+.ok  { background:var(--color-background-success); color:var(--color-text-success); }
+.no  { background:var(--color-background-danger);  color:var(--color-text-danger);  }
+.row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+</style>
+
+<div id="stepper" style="padding:0.5rem 0">
+  <div style="display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap" id="dots"></div>
+  <div id="content"></div>
+  <div style="display:flex;gap:10px;margin-top:1.25rem">
+    <button class="step-btn" id="prev" onclick="go(-1)">← Back</button>
+    <button class="step-btn" id="next" onclick="go(1)">Next →</button>
+  </div>
+</div>
+
+<script>
+const steps = [
+  {
+    title: "The core question Unity Catalog answers",
+    content: `
+      <div class="card" style="text-align:center;padding:1.5rem">
+        <div style="font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:12px">"Who can do what on which data?"</div>
+        <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:16px">
+          <div style="background:var(--color-background-info);border-radius:var(--border-radius-md);padding:10px 16px">
+            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px">WHO</div>
+            <div style="font-size:13px;font-weight:500;color:var(--color-text-info)">Arjun · Sales team · ML group</div>
+          </div>
+          <div style="background:var(--color-background-warning);border-radius:var(--border-radius-md);padding:10px 16px">
+            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px">CAN DO WHAT</div>
+            <div style="font-size:13px;font-weight:500;color:var(--color-text-warning)">READ · WRITE · DELETE · MODIFY</div>
+          </div>
+          <div style="background:var(--color-background-success);border-radius:var(--border-radius-md);padding:10px 16px">
+            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px">ON WHICH DATA</div>
+            <div style="font-size:13px;font-weight:500;color:var(--color-text-success)">Catalog · Schema · Table · Column</div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--color-text-secondary);margin-top:8px;padding:10px 14px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+        Real example: "Arjun from Sales can only READ the customers table. He cannot delete or modify it."
+      </div>`
+  },
+  {
+    title: "GRANT — giving someone access",
+    content: `
+      <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px">GRANT is how you give a person or team permission to access data.</div>
+      <div class="code">
+        <span style="color:var(--color-text-info)">GRANT</span> SELECT <span style="color:var(--color-text-info)">ON TABLE</span> marketing.sales.customers<br>
+        <span style="color:var(--color-text-info)">TO</span> <span style="color:var(--color-text-warning)">\`arjun@company.com\`</span>;
+      </div>
+      <div style="font-size:13px;color:var(--color-text-secondary);margin:10px 0 6px">What this means in plain English:</div>
+      <div class="card" style="margin:0">
+        <div class="row"><span class="badge ok">WHO</span> <span style="font-size:13px;color:var(--color-text-primary)">arjun@company.com</span></div>
+        <div class="row"><span class="badge" style="background:var(--color-background-warning);color:var(--color-text-warning)">CAN DO</span> <span style="font-size:13px;color:var(--color-text-primary)">SELECT (read/query the table)</span></div>
+        <div class="row"><span class="badge" style="background:var(--color-background-info);color:var(--color-text-info)">ON</span> <span style="font-size:13px;color:var(--color-text-primary)">marketing.sales.customers table</span></div>
+      </div>
+      <div style="margin-top:10px;font-size:13px;color:var(--color-text-secondary);padding:8px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+        After this, Arjun can run <span style="font-family:var(--font-mono);font-size:11px">SELECT * FROM marketing.sales.customers</span> — but he cannot delete or modify anything.
+      </div>`
+  },
+  {
+    title: "REVOKE — taking away access",
+    content: `
+      <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px">REVOKE is the opposite of GRANT — it removes a permission you previously gave.</div>
+      <div class="code">
+        <span style="color:var(--color-text-danger)">REVOKE</span> SELECT <span style="color:var(--color-text-danger)">ON TABLE</span> marketing.sales.customers<br>
+        <span style="color:var(--color-text-danger)">FROM</span> <span style="color:var(--color-text-warning)">\`arjun@company.com\`</span>;
+      </div>
+      <div style="font-size:13px;color:var(--color-text-secondary);margin:10px 0 6px">Real life scenario:</div>
+      <div class="card" style="margin:0">
+        <div style="font-size:13px;color:var(--color-text-primary);margin-bottom:8px">Arjun leaves the company → you run REVOKE</div>
+        <div class="row">
+          <span class="badge ok">Before</span>
+          <span style="font-size:13px;color:var(--color-text-primary)">Arjun can read customers table</span>
+        </div>
+        <div class="row">
+          <span class="badge no">After REVOKE</span>
+          <span style="font-size:13px;color:var(--color-text-primary)">Arjun gets "Access Denied" error</span>
+        </div>
+      </div>
+      <div style="margin-top:10px;font-size:13px;color:var(--color-text-secondary);padding:8px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+        One command. Instantly removed across ALL workspaces — no need to go into each workspace separately.
+      </div>`
+  },
+  {
+    title: "The 5 types of privilege you can GRANT",
+    content: `
+      <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px">Not everyone needs the same level of access. Unity Catalog has different privileges:</div>
+      ${[
+        ["SELECT","Read / query data","Analyst, reporting team","ok"],
+        ["MODIFY","Insert, update, delete rows","Data engineers","ok"],
+        ["CREATE","Create new tables or schemas","Senior engineers","ok"],
+        ["ALL PRIVILEGES","Everything — full control","Admins only","no"],
+        ["USE CATALOG / USE SCHEMA","Just to enter — like opening a door","Required before anything else","ok"],
+      ].map(([priv,meaning,who,badge])=>`
+        <div class="row" style="align-items:flex-start;margin-bottom:8px">
+          <span style="font-family:var(--font-mono);font-size:11px;background:var(--color-background-secondary);padding:3px 8px;border-radius:4px;flex-shrink:0;color:var(--color-text-primary)">${priv}</span>
+          <div>
+            <div style="font-size:13px;color:var(--color-text-primary)">${meaning}</div>
+            <div style="font-size:11px;color:var(--color-text-secondary)">Typically given to: ${who}</div>
+          </div>
+        </div>`).join('')}
+      <div style="margin-top:4px;font-size:12px;color:var(--color-text-warning);padding:8px 12px;background:var(--color-background-warning);border-radius:var(--border-radius-md)">
+        Important: to access a table, a user needs USE CATALOG + USE SCHEMA + SELECT. All three — like unlocking 3 doors.
+      </div>`
+  },
+  {
+    title: "Permissions cascade down the hierarchy",
+    content: `
+      <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px">This is the most powerful part. You can set a permission HIGH up and it applies to everything below.</div>
+      <div style="display:grid;gap:8px">
+        <div style="background:var(--color-background-info);border-radius:var(--border-radius-md);padding:10px 14px">
+          <div style="font-size:12px;font-weight:500;color:var(--color-text-info)">GRANT on Catalog (highest)</div>
+          <div style="font-size:12px;color:var(--color-text-secondary);margin-top:2px">Arjun can access ALL schemas and ALL tables inside this catalog</div>
+        </div>
+        <div style="text-align:center;font-size:16px;color:var(--color-text-tertiary)">↓</div>
+        <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 14px">
+          <div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">GRANT on Schema (middle)</div>
+          <div style="font-size:12px;color:var(--color-text-secondary);margin-top:2px">Arjun can access only tables inside this one schema</div>
+        </div>
+        <div style="text-align:center;font-size:16px;color:var(--color-text-tertiary)">↓</div>
+        <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 14px">
+          <div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">GRANT on Table (lowest)</div>
+          <div style="font-size:12px;color:var(--color-text-secondary);margin-top:2px">Arjun can access only this one specific table</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;font-size:13px;color:var(--color-text-secondary);padding:8px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+        Real use: Give the whole Finance team access to the finance catalog in one GRANT. No need to grant 100 tables one by one.
+      </div>`
+  },
+  {
+    title: "Column-level security — hide specific columns",
+    content: `
+      <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px">Sometimes a table has sensitive columns — like salary or phone number. You can hide just those columns from certain users.</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;font-size:12px;border-collapse:collapse">
+          <tr style="background:var(--color-background-secondary)">
+            <th style="padding:8px 10px;text-align:left;font-weight:500;color:var(--color-text-primary)">customer_id</th>
+            <th style="padding:8px 10px;text-align:left;font-weight:500;color:var(--color-text-primary)">name</th>
+            <th style="padding:8px 10px;text-align:left;font-weight:500;color:var(--color-text-primary)">email</th>
+            <th style="padding:8px 10px;text-align:left;font-weight:500;color:var(--color-text-danger)">salary ← sensitive</th>
+            <th style="padding:8px 10px;text-align:left;font-weight:500;color:var(--color-text-danger)">phone ← sensitive</th>
+          </tr>
+          <tr>
+            <td style="padding:8px 10px;color:var(--color-text-secondary)">001</td>
+            <td style="padding:8px 10px;color:var(--color-text-secondary)">Arjun</td>
+            <td style="padding:8px 10px;color:var(--color-text-secondary)">arjun@co.com</td>
+            <td style="padding:8px 10px;background:var(--color-background-danger);color:var(--color-text-danger)">HIDDEN</td>
+            <td style="padding:8px 10px;background:var(--color-background-danger);color:var(--color-text-danger)">HIDDEN</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 10px;color:var(--color-text-secondary)">002</td>
+            <td style="padding:8px 10px;color:var(--color-text-secondary)">Priya</td>
+            <td style="padding:8px 10px;color:var(--color-text-secondary)">priya@co.com</td>
+            <td style="padding:8px 10px;background:var(--color-background-danger);color:var(--color-text-danger)">HIDDEN</td>
+            <td style="padding:8px 10px;background:var(--color-background-danger);color:var(--color-text-danger)">HIDDEN</td>
+          </tr>
+        </table>
+      </div>
+      <div style="margin-top:10px;font-size:13px;color:var(--color-text-secondary);padding:8px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+        The analyst can see the table and query it — but salary and phone columns show as NULL or are completely hidden. The data is still in the table, just masked for that user.
+      </div>`
+  },
+  {
+    title: "Summary — 3 things to remember",
+    content: `
+      <div style="display:grid;gap:10px">
+        <div class="card" style="margin:0">
+          <div style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">1. GRANT = give access</div>
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary)">GRANT SELECT ON TABLE x TO user;</div>
+        </div>
+        <div class="card" style="margin:0">
+          <div style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">2. REVOKE = remove access</div>
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary)">REVOKE SELECT ON TABLE x FROM user;</div>
+        </div>
+        <div class="card" style="margin:0">
+          <div style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">3. Permissions flow downward</div>
+          <div style="font-size:13px;color:var(--color-text-secondary)">Grant at catalog level → covers all schemas and tables inside. No need to repeat for each table.</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;text-align:center">
+        <button class="step-btn" onclick="sendPrompt('Give me 5 interview questions on Unity Catalog permissions — GRANT, REVOKE, and access control')">Practice interview questions on this ↗</button>
+      </div>`
+  }
+];
+
+let current = 0;
+function render() {
+  const s = steps[current];
+  document.getElementById('content').innerHTML = `
+    <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:6px">Step ${current+1} of ${steps.length}</div>
+    <div style="font-size:17px;font-weight:500;color:var(--color-text-primary);margin-bottom:12px">${s.title}</div>
+    ${s.content}`;
+  document.getElementById('dots').innerHTML = steps.map((_,i)=>`
+    <div onclick="go(${i-current})" style="width:8px;height:8px;border-radius:50%;cursor:pointer;background:${i===current?'var(--color-text-info)':'var(--color-border-secondary)'};transition:background .2s"></div>`).join('');
+  document.getElementById('prev').disabled = current===0;
+  document.getElementById('next').disabled = current===steps.length-1;
+}
+function go(dir) { current=Math.max(0,Math.min(steps.length-1,current+dir)); render(); }
+render();
+</script>

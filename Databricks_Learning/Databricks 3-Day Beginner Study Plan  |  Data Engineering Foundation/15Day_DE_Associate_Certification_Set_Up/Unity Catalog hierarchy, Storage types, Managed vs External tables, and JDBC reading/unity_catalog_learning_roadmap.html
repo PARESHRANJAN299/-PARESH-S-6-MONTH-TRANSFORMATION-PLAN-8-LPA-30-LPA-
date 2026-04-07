@@ -1,0 +1,57 @@
+
+<style>
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 10px; cursor: pointer; transition: border-color 0.2s; }
+.card:hover { border-color: var(--color-border-secondary); }
+.badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+</style>
+
+<div style="padding: 0.5rem 0">
+
+  <div style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 16px;">Your Unity Catalog learning journey</div>
+
+  <div class="card" onclick="sendPrompt('Give me a recap of everything I learned about Unity Catalog so far')">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <span class="badge" style="background:var(--color-background-success);color:var(--color-text-success)">Done</span>
+      <span style="font-size:14px;font-weight:500;color:var(--color-text-primary)">1. What is Unity Catalog</span>
+    </div>
+    <div style="font-size:12px;color:var(--color-text-secondary)">Hierarchy · Table · View · Volume · Metastore · Workspaces · Shared governance</div>
+  </div>
+
+  <div class="card" style="border-color:var(--color-border-info);border-width:1.5px" onclick="sendPrompt('Explain Unity Catalog permissions management in detail — GRANT, REVOKE, who can access what')">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <span class="badge" style="background:var(--color-background-info);color:var(--color-text-info)">Next up</span>
+      <span style="font-size:14px;font-weight:500;color:var(--color-text-primary)">2. Permissions &amp; Access Control</span>
+    </div>
+    <div style="font-size:12px;color:var(--color-text-secondary)">GRANT · REVOKE · Roles · Who can read/write/delete · Column-level security</div>
+  </div>
+
+  <div class="card" onclick="sendPrompt('Explain Data Lineage in Unity Catalog')">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <span class="badge" style="background:var(--color-background-secondary);color:var(--color-text-secondary)">Coming</span>
+      <span style="font-size:14px;font-weight:500;color:var(--color-text-primary)">3. Data Lineage</span>
+    </div>
+    <div style="font-size:12px;color:var(--color-text-secondary)">Where did this data come from · How was it transformed · Who touched it</div>
+  </div>
+
+  <div class="card" onclick="sendPrompt('Explain Audit Logs in Unity Catalog')">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <span class="badge" style="background:var(--color-background-secondary);color:var(--color-text-secondary)">Coming</span>
+      <span style="font-size:14px;font-weight:500;color:var(--color-text-primary)">4. Audit Logs</span>
+    </div>
+    <div style="font-size:12px;color:var(--color-text-secondary)">Who accessed what · When · Compliance tracking</div>
+  </div>
+
+  <div class="card" onclick="sendPrompt('Explain Delta Sharing in Unity Catalog')">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <span class="badge" style="background:var(--color-background-secondary);color:var(--color-text-secondary)">Coming</span>
+      <span style="font-size:14px;font-weight:500;color:var(--color-text-primary)">5. Delta Sharing</span>
+    </div>
+    <div style="font-size:12px;color:var(--color-text-secondary)">Sharing data with external teams · Share · Recipient · Provider</div>
+  </div>
+
+  <div style="margin-top:16px;padding:12px 16px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Your plan</div>
+    <div style="font-size:12px;color:var(--color-text-secondary)">Learn each topic → then practice with real SQL examples → then interview questions on each</div>
+  </div>
+
+</div>
