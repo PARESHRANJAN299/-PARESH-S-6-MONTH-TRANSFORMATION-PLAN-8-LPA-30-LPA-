@@ -1,0 +1,218 @@
+
+<style>
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 10px; }
+.q-number { font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); margin-bottom: 4px; }
+.q-text { font-size: 14px; color: var(--color-text-primary); line-height: 1.6; margin-bottom: 10px; }
+.footer-row { display: flex; align-items: center; justify-content: space-between; }
+.level { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
+.easy { background: var(--color-background-success); color: var(--color-text-success); }
+.medium { background: var(--color-background-warning); color: var(--color-text-warning); }
+.hard { background: var(--color-background-danger); color: var(--color-text-danger); }
+.hint { font-size: 11px; color: var(--color-text-tertiary); margin-left: 8px; }
+.ans-btn { font-size: 12px; padding: 4px 14px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); cursor: pointer; }
+.ans-btn:hover { background: var(--color-background-secondary); }
+.section-header { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 0.6rem 1.25rem; margin-bottom: 10px; margin-top: 6px; font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+</style>
+
+<div style="padding: 0.5rem 0;">
+
+  <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 0.75rem 1.25rem; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <div style="font-size: 14px; font-weight: 500; color: var(--color-text-primary);">Unity Catalog — 20 interview questions</div>
+      <div style="font-size: 12px; color: var(--color-text-tertiary); margin-top: 2px;">Click Answer button — type your answer — get score and feedback!</div>
+    </div>
+    <div style="font-size: 12px; color: var(--color-text-tertiary);">20 questions</div>
+  </div>
+
+  <div class="section-header">Section 1 — Basic (Q1 to Q7)</div>
+
+  <div class="card">
+    <div class="q-number">Q1 — Basic</div>
+    <div class="q-text">What is Unity Catalog in Databricks and why does it exist?</div>
+    <div class="footer-row">
+      <div><span class="level easy">Easy</span><span class="hint">Hint: governance + cataloging across clouds</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q1: ')">Answer Q1 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q2 — Basic</div>
+    <div class="q-text">What is the hierarchy in Unity Catalog from top to bottom?</div>
+    <div class="footer-row">
+      <div><span class="level easy">Easy</span><span class="hint">Hint: Metastore → Catalog → Schema → Table/Volume</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q2: ')">Answer Q2 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q3 — Basic</div>
+    <div class="q-text">What is a Metastore? How many Metastores can one Databricks account have per region?</div>
+    <div class="footer-row">
+      <div><span class="level easy">Easy</span><span class="hint">Hint: one per region, top level container</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q3: ')">Answer Q3 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q4 — Basic</div>
+    <div class="q-text">What is a Catalog in Unity Catalog? Give a real world example.</div>
+    <div class="footer-row">
+      <div><span class="level easy">Easy</span><span class="hint">Hint: department level grouping, 3-part name</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q4: ')">Answer Q4 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q5 — Basic</div>
+    <div class="q-text">What is the 3-part naming convention in Unity Catalog? Write an example.</div>
+    <div class="footer-row">
+      <div><span class="level easy">Easy</span><span class="hint">Hint: catalog.schema.table</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q5: ')">Answer Q5 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q6 — Basic</div>
+    <div class="q-text">What is a Volume in Unity Catalog? How is it different from a Table?</div>
+    <div class="footer-row">
+      <div><span class="level easy">Easy</span><span class="hint">Hint: files vs rows and columns</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q6: ')">Answer Q6 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q7 — Basic</div>
+    <div class="q-text">What are the different types of catalogs available in Databricks? Name at least 4.</div>
+    <div class="footer-row">
+      <div><span class="level easy">Easy</span><span class="hint">Hint: regular, hive_metastore, system, samples</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q7: ')">Answer Q7 ↗</button>
+    </div>
+  </div>
+
+  <div class="section-header">Section 2 — Medium (Q8 to Q14)</div>
+
+  <div class="card">
+    <div class="q-number">Q8 — Medium</div>
+    <div class="q-text">What is the difference between a Managed Table and an External Table in Unity Catalog?</div>
+    <div class="footer-row">
+      <div><span class="level medium">Medium</span><span class="hint">Hint: DROP TABLE behaviour is the key difference!</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q8: ')">Answer Q8 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q9 — Medium</div>
+    <div class="q-text">What happens when you run DROP TABLE on a Managed table vs an External table?</div>
+    <div class="footer-row">
+      <div><span class="level medium">Medium</span><span class="hint">Hint: data deleted vs only metadata deleted</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q9: ')">Answer Q9 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q10 — Medium</div>
+    <div class="q-text">What is an External Location in Unity Catalog? Why is it needed?</div>
+    <div class="footer-row">
+      <div><span class="level medium">Medium</span><span class="hint">Hint: S3/ADLS path registered in Unity Catalog</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q10: ')">Answer Q10 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q11 — Medium</div>
+    <div class="q-text">What is a Storage Credential in Unity Catalog? How does it relate to External Location?</div>
+    <div class="footer-row">
+      <div><span class="level medium">Medium</span><span class="hint">Hint: permission to access cloud storage</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q11: ')">Answer Q11 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q12 — Medium</div>
+    <div class="q-text">What is the correct order of steps to create an External Table in Unity Catalog?</div>
+    <div class="footer-row">
+      <div><span class="level medium">Medium</span><span class="hint">Hint: credential → location → table</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q12: ')">Answer Q12 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q13 — Medium</div>
+    <div class="q-text">What is JDBC and how does Databricks use it to read from external databases?</div>
+    <div class="footer-row">
+      <div><span class="level medium">Medium</span><span class="hint">Hint: universal connector, spark.read.format("jdbc")</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q13: ')">Answer Q13 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q14 — Medium</div>
+    <div class="q-text">What is the difference between Databricks default location and External location for storage?</div>
+    <div class="footer-row">
+      <div><span class="level medium">Medium</span><span class="hint">Hint: who manages the storage</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q14: ')">Answer Q14 ↗</button>
+    </div>
+  </div>
+
+  <div class="section-header">Section 3 — Hard (Q15 to Q20)</div>
+
+  <div class="card">
+    <div class="q-number">Q15 — Hard</div>
+    <div class="q-text">Your company has Finance, HR and Sales teams. How would you design the Unity Catalog structure to ensure each team only sees their own data?</div>
+    <div class="footer-row">
+      <div><span class="level hard">Hard</span><span class="hint">Hint: separate catalogs + GRANT permissions</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q15: ')">Answer Q15 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q16 — Hard</div>
+    <div class="q-text">What is the difference between hive_metastore catalog and Unity Catalog? Why is Unity Catalog better?</div>
+    <div class="footer-row">
+      <div><span class="level hard">Hard</span><span class="hint">Hint: old vs new, governance, multi-workspace</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q16: ')">Answer Q16 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q17 — Hard</div>
+    <div class="q-text">A new engineer accidentally runs DROP TABLE on a critical table. How do you protect against data loss — should it be Managed or External table?</div>
+    <div class="footer-row">
+      <div><span class="level hard">Hard</span><span class="hint">Hint: think about which table type keeps data safe</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q17: ')">Answer Q17 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q18 — Hard</div>
+    <div class="q-text">Your MFT pipeline receives ZIP files every day. Where in Unity Catalog would you store the raw ZIPs, the processed files, and the final Delta table? Give the full path for each.</div>
+    <div class="footer-row">
+      <div><span class="level hard">Hard</span><span class="hint">Hint: Volume for files, Table for structured data</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q18: ')">Answer Q18 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q19 — Hard</div>
+    <div class="q-text">What tabs does the Catalog Explorer show for a table and what does each tab tell you?</div>
+    <div class="footer-row">
+      <div><span class="level hard">Hard</span><span class="hint">Hint: Overview, Permissions, History, Lineage, Insights</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q19: ')">Answer Q19 ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-number">Q20 — Hard</div>
+    <div class="q-text">You try to create an External Volume but it fails with an error. What is the most likely reason and how do you fix it?</div>
+    <div class="footer-row">
+      <div><span class="level hard">Hard</span><span class="hint">Hint: External Location must be defined first!</span></div>
+      <button class="ans-btn" onclick="sendPrompt('My answer for Unity Catalog Q20: ')">Answer Q20 ↗</button>
+    </div>
+  </div>
+
+  <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 0.75rem 1.25rem; margin-top: 4px; display: flex; justify-content: space-between; align-items: center;">
+    <div style="font-size: 12px; color: var(--color-text-tertiary);">Q1-Q7 = Basic | Q8-Q14 = Medium | Q15-Q20 = Hard</div>
+    <div style="font-size: 12px; color: var(--color-text-tertiary);">Target: 170/200</div>
+  </div>
+
+</div>
