@@ -1,0 +1,141 @@
+
+<style>
+.phase-card { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 12px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 16px; cursor: pointer; }
+.phase-card:hover { background: var(--color-background-primary); border-color: var(--color-border-secondary); }
+.phase-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.phase-label { font-size: 13px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+.phase-days { font-size: 13px; color: var(--color-text-secondary); }
+.phase-dates { font-size: 11px; color: var(--color-text-tertiary); }
+.stat { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px 16px; text-align: center; }
+.stat-num { font-size: 28px; font-weight: 500; color: var(--color-text-primary); }
+.stat-label { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+.progress-bar { height: 8px; border-radius: 4px; background: var(--color-border-tertiary); margin: 4px 0 16px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+</style>
+
+<h2 class="sr-only">Paresh's 30 LPA countdown — 170 days remaining from April 13 to September 30, 2026</h2>
+
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
+  <div class="stat"><div class="stat-num" style="color:#1D9E75;">170</div><div class="stat-label">Days remaining</div></div>
+  <div class="stat"><div class="stat-num" style="color:#378ADD;">6</div><div class="stat-label">Months left</div></div>
+  <div class="stat"><div class="stat-num" style="color:#BA7517;">Sep 30</div><div class="stat-label">Target date</div></div>
+</div>
+
+<div style="margin-bottom:6px;font-size:12px;color:var(--color-text-secondary);">Overall journey progress</div>
+<div class="progress-bar"><div class="progress-fill" style="width:2%;background:#1D9E75;"></div></div>
+
+<div style="font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px;">Phase breakdown</div>
+
+<div class="phase-card" onclick="sendPrompt('Tell me SQL study plan for April 15 to May 1')">
+  <div class="phase-dot" style="background:#1D9E75;"></div>
+  <div style="flex:1;">
+    <div class="phase-label">SQL Master</div>
+    <div class="phase-dates">Apr 15 — May 1</div>
+  </div>
+  <div style="text-align:right;">
+    <div class="phase-days" style="color:#1D9E75;">15 days</div>
+    <div class="phase-dates">starts in 2 days</div>
+  </div>
+</div>
+
+<div class="phase-card" onclick="sendPrompt('Tell me Python study plan for May 1 to May 20')">
+  <div class="phase-dot" style="background:#378ADD;"></div>
+  <div style="flex:1;">
+    <div class="phase-label">Python Master</div>
+    <div class="phase-dates">May 1 — May 20</div>
+  </div>
+  <div style="text-align:right;">
+    <div class="phase-days" style="color:#378ADD;">20 days</div>
+    <div class="phase-dates">starts in 18 days</div>
+  </div>
+</div>
+
+<div class="phase-card" onclick="sendPrompt('Tell me PySpark study plan for May 20 to June 5')">
+  <div class="phase-dot" style="background:#7F77DD;"></div>
+  <div style="flex:1;">
+    <div class="phase-label">PySpark Master</div>
+    <div class="phase-dates">May 20 — Jun 5</div>
+  </div>
+  <div style="text-align:right;">
+    <div class="phase-days" style="color:#7F77DD;">15 days</div>
+    <div class="phase-dates">starts in 37 days</div>
+  </div>
+</div>
+
+<div class="phase-card" onclick="sendPrompt('Tell me System Design study plan for June 5 to June 15')">
+  <div class="phase-dot" style="background:#D85A30;"></div>
+  <div style="flex:1;">
+    <div class="phase-label">System Design</div>
+    <div class="phase-dates">Jun 5 — Jun 15</div>
+  </div>
+  <div style="text-align:right;">
+    <div class="phase-days" style="color:#D85A30;">10 days</div>
+    <div class="phase-dates">starts in 53 days</div>
+  </div>
+</div>
+
+<div class="phase-card" onclick="sendPrompt('Tell me DSA study plan for June 10 to June 20')">
+  <div class="phase-dot" style="background:#D4537E;"></div>
+  <div style="flex:1;">
+    <div class="phase-label">DSA Basics</div>
+    <div class="phase-dates">Jun 10 — Jun 20</div>
+  </div>
+  <div style="text-align:right;">
+    <div class="phase-days" style="color:#D4537E;">10 days</div>
+    <div class="phase-dates">starts in 58 days</div>
+  </div>
+</div>
+
+<div class="phase-card" onclick="sendPrompt('Tell me AWS Cloud study plan for June 20 to June 30')">
+  <div class="phase-dot" style="background:#EF9F27;"></div>
+  <div style="flex:1;">
+    <div class="phase-label">AWS Cloud + Kafka</div>
+    <div class="phase-dates">Jun 20 — Jun 30</div>
+  </div>
+  <div style="text-align:right;">
+    <div class="phase-days" style="color:#EF9F27;">10 days</div>
+    <div class="phase-dates">starts in 68 days</div>
+  </div>
+</div>
+
+<div class="phase-card" onclick="sendPrompt('Tell me about the 4 projects I will build in July')">
+  <div class="phase-dot" style="background:#639922;"></div>
+  <div style="flex:1;">
+    <div class="phase-label">4 Projects + dbt</div>
+    <div class="phase-dates">Jul 1 — Jul 31</div>
+  </div>
+  <div style="text-align:right;">
+    <div class="phase-days" style="color:#639922;">31 days</div>
+    <div class="phase-dates">starts in 79 days</div>
+  </div>
+</div>
+
+<div class="phase-card" onclick="sendPrompt('Tell me interview preparation plan for August to September 15')">
+  <div class="phase-dot" style="background:#185FA5;"></div>
+  <div style="flex:1;">
+    <div class="phase-label">Interview Preparation</div>
+    <div class="phase-dates">Aug 1 — Sep 15</div>
+  </div>
+  <div style="text-align:right;">
+    <div class="phase-days" style="color:#185FA5;">45 days</div>
+    <div class="phase-dates">starts in 110 days</div>
+  </div>
+</div>
+
+<div class="phase-card" onclick="sendPrompt('What companies should I apply to for 30 LPA in September 2026?')">
+  <div class="phase-dot" style="background:#A32D2D;"></div>
+  <div style="flex:1;">
+    <div class="phase-label">Apply + Get Offers</div>
+    <div class="phase-dates">Sep 15 — Sep 30</div>
+  </div>
+  <div style="text-align:right;">
+    <div class="phase-days" style="color:#A32D2D;">15 days</div>
+    <div class="phase-dates">starts in 155 days</div>
+  </div>
+</div>
+
+<div style="margin-top:16px;padding:12px 16px;border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);text-align:center;">
+  <div style="font-size:13px;color:var(--color-text-secondary);">Daily commitment needed</div>
+  <div style="font-size:22px;font-weight:500;color:var(--color-text-primary);margin:4px 0;">4 hours every single day</div>
+  <div style="font-size:12px;color:var(--color-text-tertiary);">170 days × 4 hours = 680 hours of transformation</div>
+</div>
