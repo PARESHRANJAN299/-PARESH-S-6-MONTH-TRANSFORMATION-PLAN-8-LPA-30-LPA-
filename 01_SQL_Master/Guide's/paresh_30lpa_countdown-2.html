@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paresh Ranjan Rout — 30 LPA by September 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #16161f;
+    --border: rgba(255,255,255,0.06);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0eff5;
+    --text2: #8b8a9e;
+    --text3: #4a4960;
+    --gold: #f5c842;
+    --gold2: #e8a820;
+    --green: #2de08b;
+    --blue: #4d9fff;
+    --purple: #a78bfa;
+    --red: #ff6b6b;
+    --orange: #ff9f43;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .noise {
+    position: fixed;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* HERO */
+  .hero {
+    padding: 80px 0 60px;
+    text-align: center;
+    position: relative;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(245,200,66,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245,200,66,0.08);
+    border: 1px solid rgba(245,200,66,0.2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 6vw, 68px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+    animation: fadeDown 0.6s 0.1s ease both;
+  }
+
+  h1 span {
+    background: linear-gradient(135deg, #f5c842 0%, #ff9f43 50%, #ff6b6b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text2);
+    font-weight: 300;
+    max-width: 480px;
+    margin: 0 auto 48px;
+    line-height: 1.7;
+    animation: fadeDown 0.6s 0.2s ease both;
+  }
+
+  /* COUNTDOWN */
+  .countdown-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 60px;
+    animation: fadeDown 0.6s 0.3s ease both;
+  }
+
+  .countdown-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 16px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .countdown-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.6;
+  }
+
+  .countdown-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+
+  .countdown-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* CERTS */
+  .section { margin-bottom: 56px; }
+
+  .section-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .cert-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .cert-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .cert-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: rgba(45,224,139,0.1);
+    border: 1px solid rgba(45,224,139,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .cert-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .cert-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+  }
+
+  /* PHASES TIMELINE */
+  .phases { display: flex; flex-direction: column; gap: 8px; }
+
+  .phase {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .phase:hover {
+    border-color: var(--border2);
+    transform: translateX(4px);
+  }
+
+  .phase-inner {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    gap: 16px;
+  }
+
+  .phase-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    width: 20px;
+    flex-shrink: 0;
+  }
+
+  .phase-accent {
+    width: 3px;
+    height: 36px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .phase-info { flex: 1; }
+
+  .phase-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .phase-range {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  .phase-meta { text-align: right; }
+
+  .phase-days-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .phase-days-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .phase-bar {
+    height: 3px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .phase-bar-fill {
+    height: 100%;
+    border-radius: 0;
+    transition: width 1s ease;
+  }
+
+  /* SKILLS GRID */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .skill-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+
+  .skill-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .skill-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .skill-scores {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+  }
+
+  .score-now { color: var(--red); }
+  .score-arrow { color: var(--text3); }
+  .score-after { color: var(--green); }
+
+  .skill-track {
+    height: 5px;
+    background: var(--bg3);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .skill-now-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    border-radius: 3px;
+    background: rgba(255,107,107,0.4);
+  }
+
+  .skill-after-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    border-radius: 3px;
+    opacity: 0.5;
+    animation: none;
+  }
+
+  /* PROMISE */
+  .promise-card {
+    background: linear-gradient(135deg, rgba(245,200,66,0.06) 0%, rgba(255,107,107,0.04) 100%);
+    border: 1px solid rgba(245,200,66,0.15);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .promise-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: 50%;
+    transform: translateX(-50%);
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(245,200,66,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .promise-amount {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(48px, 8vw, 88px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    background: linear-gradient(135deg, #f5c842, #ff9f43);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .promise-label {
+    font-size: 16px;
+    color: var(--text2);
+    margin-bottom: 4px;
+  }
+
+  .promise-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    opacity: 0.7;
+  }
+
+  .promise-quote {
+    margin-top: 28px;
+    font-size: 14px;
+    color: var(--text2);
+    font-style: italic;
+    line-height: 1.7;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* GITHUB */
+  .github-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .github-stat {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .github-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--green);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .github-label {
+    font-size: 12px;
+    color: var(--text3);
+  }
+
+  /* Footer */
+  .footer {
+    padding: 40px 0;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  .footer-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .footer-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up { animation: fadeUp 0.6s ease both; }
+
+  @media (max-width: 600px) {
+    .countdown-row { grid-template-columns: repeat(2, 1fr); }
+    .cert-row { grid-template-columns: 1fr; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .github-row { grid-template-columns: 1fr; }
+    h1 { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-glow"></div>
+    <div class="badge">
+      <div class="badge-dot"></div>
+      Active Transformation — April 2026
+    </div>
+    <h1>Paresh Ranjan Rout<br><span>8 LPA → 30 LPA</span></h1>
+    <p class="hero-sub">Data Engineer in the making. 170 days left. Family promise on the line. Nothing stops this.</p>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="section fade-up">
+    <div class="section-title">Countdown to September 30, 2026</div>
+    <div class="countdown-row">
+      <div class="countdown-card">
+        <div class="countdown-num" id="days-left">170</div>
+        <div class="countdown-label">Days left</div>
+      </div>
+      <div class="countdown-card">
+        <div class="countdown-num">680</div>
+        <div class="countdown-label">Study hours</div>
+      </div>
+      <div class="countdown-card">
+        <div class="countdown-num">4</div>
+        <div class="countdown-label">Hours/day</div>
+      </div>
+      <div class="countdown-card">
+        <div class="countdown-num" style="color:var(--green);">Sep 30</div>
+        <div class="countdown-label">Offer date</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CERTS -->
+  <div class="section fade-up">
+    <div class="section-title">Certifications earned</div>
+    <div class="cert-row">
+      <div class="cert-card">
+        <div class="cert-icon">🏆</div>
+        <div>
+          <div class="cert-name">Databricks Fundamentals</div>
+          <div class="cert-date">✓ March 29, 2026</div>
+        </div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">🎓</div>
+        <div>
+          <div class="cert-name">O'Reilly Databricks DE</div>
+          <div class="cert-date">✓ April 11, 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASES -->
+  <div class="section fade-up">
+    <div class="section-title">6-Month Study Plan</div>
+    <div class="phases" id="phases-list"></div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="section fade-up">
+    <div class="section-title">Skills — Now vs After June 30</div>
+    <div class="skills-grid" id="skills-grid"></div>
+  </div>
+
+  <!-- GITHUB -->
+  <div class="section fade-up">
+    <div class="section-title">GitHub proof of work</div>
+    <div class="github-row">
+      <div class="github-stat">
+        <div class="github-num">73+</div>
+        <div class="github-label">Total commits</div>
+      </div>
+      <div class="github-stat">
+        <div class="github-num">17+</div>
+        <div class="github-label">Day streak</div>
+      </div>
+      <div class="github-stat">
+        <div class="github-num">10</div>
+        <div class="github-label">Topic folders</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROMISE -->
+  <div class="section fade-up">
+    <div class="promise-card">
+      <div class="promise-amount">₹30 LPA</div>
+      <div class="promise-label">Family Promise</div>
+      <div class="promise-date">deadline: September 30, 2026</div>
+      <p class="promise-quote">"Change my family generation. I made a promise. I will keep it. 170 days of sacrifice for a lifetime of difference."</p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-name">Paresh Ranjan Rout</div>
+    <div class="footer-sub">DataPOEM · Bengaluru · Built April 13, 2026</div>
+  </div>
+
+</div>
+
+<script>
+const phases = [
+  { num:'01', name:'SQL Master', range:'Apr 15 — May 1', days:15, daysTo:2, color:'#2de08b' },
+  { num:'02', name:'Python Master', range:'May 1 — May 20', days:20, daysTo:18, color:'#4d9fff' },
+  { num:'03', name:'PySpark Master', range:'May 20 — Jun 5', days:15, daysTo:37, color:'#a78bfa' },
+  { num:'04', name:'System Design', range:'Jun 5 — Jun 15', days:10, daysTo:53, color:'#ff9f43' },
+  { num:'05', name:'DSA Basics', range:'Jun 10 — Jun 20', days:10, daysTo:58, color:'#ff6b6b' },
+  { num:'06', name:'AWS Cloud + Kafka', range:'Jun 20 — Jun 30', days:10, daysTo:68, color:'#f5c842' },
+  { num:'07', name:'4 Projects + dbt', range:'Jul 1 — Jul 31', days:31, daysTo:79, color:'#2de08b' },
+  { num:'08', name:'Interview Preparation', range:'Aug 1 — Sep 15', days:45, daysTo:110, color:'#4d9fff' },
+  { num:'09', name:'Apply + Get Offers', range:'Sep 15 — Sep 30', days:15, daysTo:155, color:'#f5c842' },
+];
+
+const skills = [
+  { name:'Databricks', now:9, after:9, color:'#2de08b' },
+  { name:'SQL', now:3, after:8, color:'#4d9fff' },
+  { name:'Python', now:1, after:7, color:'#a78bfa' },
+  { name:'PySpark', now:2, after:8, color:'#ff9f43' },
+  { name:'System Design', now:2, after:7, color:'#ff6b6b' },
+  { name:'DSA', now:1, after:6, color:'#f5c842' },
+  { name:'AWS', now:2, after:7, color:'#2de08b' },
+  { name:'Projects', now:1, after:9, color:'#4d9fff' },
+];
+
+const phasesList = document.getElementById('phases-list');
+phases.forEach(p => {
+  const div = document.createElement('div');
+  div.className = 'phase';
+  div.innerHTML = `
+    <div class="phase-inner">
+      <div class="phase-number">${p.num}</div>
+      <div class="phase-accent" style="background:${p.color};"></div>
+      <div class="phase-info">
+        <div class="phase-name">${p.name}</div>
+        <div class="phase-range">${p.range} · starts in ${p.daysTo} days</div>
+      </div>
+      <div class="phase-meta">
+        <div class="phase-days-num" style="color:${p.color};">${p.days}</div>
+        <div class="phase-days-label">days</div>
+      </div>
+    </div>
+    <div class="phase-bar">
+      <div class="phase-bar-fill" style="width:0%;background:${p.color};opacity:0.4;" data-width="${p.days/45*100}%"></div>
+    </div>`;
+  phasesList.appendChild(div);
+});
+
+const skillsGrid = document.getElementById('skills-grid');
+skills.forEach(s => {
+  const div = document.createElement('div');
+  div.className = 'skill-card';
+  div.innerHTML = `
+    <div class="skill-header">
+      <div class="skill-name">${s.name}</div>
+      <div class="skill-scores">
+        <span class="score-now">${s.now}/10</span>
+        <span class="score-arrow">→</span>
+        <span class="score-after">${s.after}/10</span>
+      </div>
+    </div>
+    <div class="skill-track">
+      <div class="skill-after-bar" style="width:${s.after*10}%;background:${s.color};"></div>
+      <div class="skill-now-bar" style="width:${s.now*10}%;"></div>
+    </div>`;
+  skillsGrid.appendChild(div);
+});
+
+// Live countdown
+function updateCountdown() {
+  const target = new Date('2026-09-30T23:59:59');
+  const now = new Date();
+  const diff = target - now;
+  const days = Math.floor(diff / (1000*60*60*24));
+  document.getElementById('days-left').textContent = days;
+}
+updateCountdown();
+setInterval(updateCountdown, 60000);
+
+// Animate bars on load
+setTimeout(() => {
+  document.querySelectorAll('.phase-bar-fill').forEach(el => {
+    el.style.transition = 'width 1s ease';
+    el.style.width = el.dataset.width;
+  });
+}, 300);
+</script>
+</body>
+</html>
