@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DataPOEM · SharePoint Storage Report</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0d1117;
+  color: #ffffff;
+  font-family: 'Nunito Sans', sans-serif;
+  min-height: 100vh;
+}
+
+/* ── TOP HEADER ── */
+.topbar {
+  background: linear-gradient(135deg, #1a2236 0%, #111827 100%);
+  border-bottom: 2px solid #2563eb;
+  padding: 1.2rem 2.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.topbar-brand { display: flex; align-items: center; gap: 0.85rem; }
+.topbar-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; flex-shrink: 0;
+}
+.topbar-title  { font-family: 'Nunito', sans-serif; font-size: 1.25rem; font-weight: 800; color: #fff; }
+.topbar-sub    { font-size: 0.75rem; color: #94a3b8; margin-top: 2px; }
+.topbar-date   { font-size: 0.78rem; color: #94a3b8; background: #1e293b; padding: 0.4rem 0.9rem; border-radius: 8px; border: 1px solid #2d3f5a; }
+
+/* ── MAIN LAYOUT ── */
+.page { padding: 2rem 2.5rem; max-width: 1600px; margin: 0 auto; }
+
+/* ── PLAIN-ENGLISH SUMMARY BOX ── */
+.summary-box {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1a2d4a 100%);
+  border: 1px solid #2563eb;
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  position: relative; overflow: hidden;
+}
+.summary-box::before {
+  content: '📋';
+  position: absolute; right: 1.5rem; top: 1rem;
+  font-size: 3rem; opacity: 0.15;
+}
+.summary-box h2 {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: #60a5fa; margin-bottom: 0.9rem;
+}
+.summary-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+.summary-bullets li {
+  display: flex; align-items: flex-start; gap: 0.6rem;
+  font-size: 0.92rem; color: #e2e8f0; line-height: 1.5;
+}
+.summary-bullets li::before {
+  content: '●'; color: #3b82f6; font-size: 0.55rem;
+  margin-top: 0.45rem; flex-shrink: 0;
+}
+.summary-bullets li strong { color: #ffffff; }
+
+/* ── KPI CARDS ── */
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.1rem; margin-bottom: 2rem; }
+.kpi {
+  background: #161e2e;
+  border: 1px solid #1e2d45;
+  border-radius: 14px;
+  padding: 1.3rem 1.5rem;
+  position: relative; overflow: hidden;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.kpi:hover { transform: translateY(-3px); border-color: #3b82f6; }
+.kpi-accent { position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.kpi-emoji  { font-size: 1.6rem; margin-bottom: 0.6rem; display: block; }
+.kpi-label  { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; font-weight: 700; margin-bottom: 0.4rem; }
+.kpi-value  { font-family: 'Nunito', sans-serif; font-size: 2.2rem; font-weight: 900; line-height: 1; color: #fff; }
+.kpi-value span { font-size: 1rem; font-weight: 600; color: #94a3b8; margin-left: 3px; }
+.kpi-desc   { font-size: 0.75rem; color: #64748b; margin-top: 0.4rem; }
+
+/* ── SECTION TITLE ── */
+.section-title {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.05rem; font-weight: 800;
+  color: #fff; margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.section-title .badge {
+  font-size: 0.65rem; background: #2563eb;
+  color: #fff; padding: 0.15rem 0.6rem;
+  border-radius: 99px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.07em;
+}
+
+/* ── MAIN TWO-COLUMN ── */
+.two-col { display: grid; grid-template-columns: 3fr 2fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+
+/* ── CARD ── */
+.card { background: #161e2e; border: 1px solid #1e2d45; border-radius: 14px; overflow: hidden; }
+.card-head {
+  padding: 0.9rem 1.4rem; border-bottom: 1px solid #1e2d45;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.card-head-title { font-family: 'Nunito', sans-serif; font-size: 0.88rem; font-weight: 800; color: #fff; }
+.card-head-hint  { font-size: 0.7rem; color: #3b82f6; cursor: default; }
+.card-body { padding: 1.2rem 1.4rem; }
+
+/* ── SITE BAR ROWS ── */
+.site-row {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.55rem 0.5rem; cursor: pointer;
+  border-radius: 8px; transition: background 0.15s;
+  border-bottom: 1px solid rgba(30,45,69,0.5);
+}
+.site-row:hover { background: #1e2d45; }
+.site-row:last-child { border-bottom: none; }
+.site-rank { font-size: 0.7rem; color: #475569; min-width: 18px; text-align: right; font-weight: 700; }
+.site-name {
+  font-size: 0.82rem; font-weight: 600; color: #e2e8f0;
+  min-width: 185px; max-width: 185px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.site-bar-wrap { flex: 1; }
+.bar-track { background: #0f172a; border-radius: 99px; height: 9px; overflow: hidden; }
+.bar-fill  { height: 100%; border-radius: 99px; transition: width 1s cubic-bezier(.25,.46,.45,.94); }
+.bar-fill.c1 { background: linear-gradient(90deg, #2563eb, #06b6d4); }
+.bar-fill.c2 { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+.bar-fill.c3 { background: linear-gradient(90deg, #0891b2, #38bdf8); }
+.bar-fill.c4 { background: linear-gradient(90deg, #059669, #34d399); }
+.bar-fill.c5 { background: linear-gradient(90deg, #d97706, #fbbf24); }
+.bar-fill.c6 { background: linear-gradient(90deg, #db2777, #f472b6); }
+.site-gb   { font-size: 0.75rem; color: #94a3b8; min-width: 70px; text-align: right; font-weight: 700; font-family: 'Nunito', sans-serif; }
+.site-tag  { font-size: 0.62rem; color: #3b82f6; background: rgba(59,130,246,0.12); padding: 0.15rem 0.5rem; border-radius: 6px; font-weight: 700; min-width: 38px; text-align: center; }
+
+/* ── DONUT ── */
+.donut-section { display: flex; flex-direction: column; align-items: center; padding: 0.5rem 0; }
+#donutSvg { overflow: visible; }
+.donut-legend { width: 100%; margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.legend-item  { display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; }
+.legend-left  { display: flex; align-items: center; gap: 0.5rem; }
+.legend-dot   { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.legend-name  { color: #cbd5e1; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.legend-val   { color: #64748b; font-size: 0.7rem; font-weight: 700; }
+
+/* ── FULL TABLE ── */
+.table-wrap { overflow-x: auto; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.tbl th {
+  padding: 0.6rem 0.8rem; text-align: left;
+  font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.08em;
+  color: #475569; border-bottom: 1px solid #1e2d45; white-space: nowrap;
+  font-weight: 700;
+}
+.tbl td { padding: 0.5rem 0.8rem; border-bottom: 1px solid rgba(30,45,69,0.5); color: #e2e8f0; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: #1e2d45; cursor: pointer; }
+.tbl .num { font-family: 'Nunito', sans-serif; font-weight: 700; }
+.tbl .muted { color: #64748b; }
+.pill { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 99px; font-size: 0.65rem; font-weight: 700; }
+.p-green  { background: rgba(5,150,105,0.15); color: #34d399; }
+.p-blue   { background: rgba(37,99,235,0.15); color: #60a5fa; }
+.p-orange { background: rgba(217,119,6,0.18); color: #fbbf24; }
+.p-red    { background: rgba(220,38,38,0.15); color: #f87171; }
+
+/* ── MODAL ── */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 300; align-items: center; justify-content: center; backdrop-filter: blur(6px); }
+.overlay.open { display: flex; }
+.modal { background: #161e2e; border: 1px solid #2563eb; border-radius: 20px; width: 95%; max-width: 820px; max-height: 88vh; display: flex; flex-direction: column; animation: slide-up 0.25s ease; }
+@keyframes slide-up { from { opacity:0; transform:translateY(20px) scale(0.97); } to { opacity:1; transform:translateY(0) scale(1); } }
+.modal-head { padding: 1.3rem 1.6rem; border-bottom: 1px solid #1e2d45; display: flex; justify-content: space-between; align-items: flex-start; }
+.modal-site-name { font-family: 'Nunito', sans-serif; font-size: 1.1rem; font-weight: 900; color: #fff; }
+.modal-site-stat { font-size: 0.75rem; color: #64748b; margin-top: 4px; }
+.modal-close { background: #1e2d45; border: none; color: #94a3b8; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s; }
+.modal-close:hover { background: #2d3f5a; color: #fff; }
+.modal-body { padding: 1.5rem 1.6rem; overflow-y: auto; flex: 1; }
+.modal-explain {
+  background: #0f172a; border-left: 3px solid #2563eb;
+  border-radius: 0 10px 10px 0; padding: 0.8rem 1rem;
+  margin-bottom: 1.2rem; font-size: 0.82rem; color: #94a3b8; line-height: 1.6;
+}
+.modal-explain strong { color: #fff; }
+.lib-row {
+  display: grid; grid-template-columns: 1fr 180px 90px 75px;
+  gap: 0.75rem; align-items: center;
+  padding: 0.55rem 0.5rem; border-radius: 8px;
+  border-bottom: 1px solid rgba(30,45,69,0.5);
+  transition: background 0.15s; cursor: default;
+}
+.lib-row:hover { background: #1e2d45; }
+.lib-row:last-child { border-bottom: none; }
+.lib-row-head { display: grid; grid-template-columns: 1fr 180px 90px 75px; gap: 0.75rem; padding: 0 0.5rem 0.5rem; border-bottom: 1px solid #1e2d45; margin-bottom: 0.25rem; }
+.lib-row-head span { font-size: 0.63rem; text-transform: uppercase; letter-spacing: 0.09em; color: #475569; font-weight: 700; }
+.lib-name { font-size: 0.82rem; font-weight: 600; color: #e2e8f0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: flex; align-items: center; gap: 0.4rem; }
+.lib-bar-outer { display: flex; align-items: center; gap: 0.5rem; }
+.lib-bar-track { flex: 1; background: #0f172a; border-radius: 99px; height: 7px; overflow: hidden; }
+.lib-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #2563eb, #06b6d4); }
+.lib-mb   { font-size: 0.72rem; color: #94a3b8; font-weight: 600; text-align: right; white-space: nowrap; }
+.lib-gb   { font-size: 0.78rem; font-weight: 800; color: #fff; text-align: right; font-family: 'Nunito', sans-serif; }
+.lib-count{ font-size: 0.72rem; color: #64748b; text-align: right; }
+.no-libs  { text-align: center; padding: 2.5rem 1rem; color: #475569; font-size: 0.85rem; }
+
+/* ── SEARCH ── */
+.search-wrap { margin-bottom: 1rem; }
+.search-input {
+  background: #161e2e; border: 1px solid #1e2d45; color: #fff;
+  padding: 0.55rem 1rem 0.55rem 2.4rem; border-radius: 10px;
+  font-family: 'Nunito Sans', sans-serif; font-size: 0.85rem;
+  width: 280px; outline: none; transition: border 0.2s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 0.75rem center;
+}
+.search-input:focus { border-color: #2563eb; }
+.search-input::placeholder { color: #475569; }
+
+/* ── TIPS SECTION ── */
+.tips-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem; }
+.tip-card { background: #161e2e; border: 1px solid #1e2d45; border-radius: 12px; padding: 1.1rem 1.2rem; }
+.tip-icon { font-size: 1.5rem; margin-bottom: 0.5rem; display: block; }
+.tip-title { font-family: 'Nunito', sans-serif; font-size: 0.82rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
+.tip-text  { font-size: 0.76rem; color: #94a3b8; line-height: 1.55; }
+
+@media (max-width: 1100px) { .kpi-row { grid-template-columns: repeat(2,1fr); } .two-col { grid-template-columns: 1fr; } }
+@media (max-width: 700px)  { .kpi-row { grid-template-columns: repeat(2,1fr); } .page { padding: 1.25rem; } .topbar { padding: 1rem 1.25rem; } }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-icon">🗄️</div>
+    <div>
+      <div class="topbar-title">SharePoint Storage Report</div>
+      <div class="topbar-sub">DataPOEM Tenant · datapoem1.sharepoint.com</div>
+    </div>
+  </div>
+  <div class="topbar-date">📅 Generated: 20 April 2026, 11:14 AM</div>
+</div>
+
+<div class="page">
+
+  <!-- PLAIN ENGLISH SUMMARY -->
+  <div class="summary-box">
+    <h2>📌 What This Report Tells You</h2>
+    <ul class="summary-bullets">
+      <li>Your company has <strong>137 SharePoint sites</strong> in total — these are like folders in the cloud where your teams store files and documents.</li>
+      <li>Together, these sites are using <strong>1,786 GB (about 1.7 TB)</strong> of storage out of a total allowed space of <strong>25,600 GB per site</strong> — you still have plenty of room.</li>
+      <li>The <strong>biggest storage user by far</strong> is "DataPOEM Data Vault" which holds <strong>1,107 GB</strong> — that's 62% of ALL your company's storage, mostly client data files.</li>
+      <li>The <strong>top 5 sites together use 96%</strong> of all storage — the remaining 132 sites barely use any space.</li>
+      <li><strong>No sites are near their storage limit</strong> — the highest usage is only 4.3% of its allowed quota. Everything is healthy. ✅</li>
+      <li>Click on any site name in the charts below to see <strong>which folders (libraries) inside that site</strong> are using the most space.</li>
+    </ul>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-accent" style="background: linear-gradient(90deg,#2563eb,#06b6d4)"></div>
+      <span class="kpi-emoji">🏢</span>
+      <div class="kpi-label">Total Sites</div>
+      <div class="kpi-value">137 <span>sites</span></div>
+      <div class="kpi-desc">SharePoint team sites in your company</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background: linear-gradient(90deg,#7c3aed,#a78bfa)"></div>
+      <span class="kpi-emoji">💾</span>
+      <div class="kpi-label">Total Storage Used</div>
+      <div class="kpi-value">1,786 <span>GB</span></div>
+      <div class="kpi-desc">≈ 1.74 TB of data stored across all sites</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background: linear-gradient(90deg,#059669,#34d399)"></div>
+      <span class="kpi-emoji">✅</span>
+      <div class="kpi-label">Sites Near Limit</div>
+      <div class="kpi-value">0 <span>sites</span></div>
+      <div class="kpi-desc">No site is over 90% of its storage quota</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background: linear-gradient(90deg,#d97706,#fbbf24)"></div>
+      <span class="kpi-emoji">📁</span>
+      <div class="kpi-label">Storage Available</div>
+      <div class="kpi-value">96 <span>%</span></div>
+      <div class="kpi-desc">Storage quota still free across all sites</div>
+    </div>
+  </div>
+
+  <!-- TOP SITES + DONUT -->
+  <div class="two-col">
+
+    <!-- BAR CHART -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-head-title">🏆 Top Sites by Storage Used</span>
+        <span class="card-head-hint">👆 Click any row to see what's inside</span>
+      </div>
+      <div class="card-body" id="topBars"></div>
+    </div>
+
+    <!-- DONUT -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-head-title">🍩 Storage Share by Site</span>
+      </div>
+      <div class="card-body donut-section">
+        <svg id="donutSvg" viewBox="0 0 200 200" width="190" height="190"></svg>
+        <div class="donut-legend" id="donutLegend"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ALL SITES TABLE -->
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="card-head">
+      <span class="card-head-title">📋 All 137 Sites — Full List</span>
+      <div class="search-wrap" style="margin-bottom:0">
+        <input class="search-input" type="text" placeholder="Search by site name…" id="searchBox" oninput="filterTable()">
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="tbl" id="mainTable">
+        <thead><tr>
+          <th>#</th>
+          <th>Site Name</th>
+          <th style="text-align:right">Storage Used</th>
+          <th style="text-align:right">% of Quota</th>
+          <th>Last Updated</th>
+          <th>Status</th>
+        </tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TIPS -->
+  <div class="section-title">💡 Storage Tips for Your Team</div>
+  <div class="tips-grid">
+    <div class="tip-card">
+      <span class="tip-icon">🗂️</span>
+      <div class="tip-title">DataPOEM Data Vault is Your Biggest Site</div>
+      <div class="tip-text">This one site holds 1,107 GB — mainly the UNILEVER folder (272 GB) and MARS folder (55 GB). Consider archiving older client data to free up space.</div>
+    </div>
+    <div class="tip-card">
+      <span class="tip-icon">🔒</span>
+      <div class="tip-title">You're Well Within Limits</div>
+      <div class="tip-text">Every single site is below 5% of its allowed quota. Microsoft gives you 25,600 GB per site — no urgent action needed. You are in a healthy state.</div>
+    </div>
+    <div class="tip-card">
+      <span class="tip-icon">🧹</span>
+      <div class="tip-title">130+ Sites Use Almost No Space</div>
+      <div class="tip-text">Only 7 sites use more than 1 GB. The other 130 sites together use less than 1% of total storage. Consider reviewing and cleaning up unused sites.</div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- MODAL for library drill-down -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div style="flex:1;min-width:0">
+        <div class="modal-site-name" id="mTitle">Site Name</div>
+        <div class="modal-site-stat" id="mStat"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="mBody"></div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   REAL DATA — 137 sites + 65 library records
+   ═══════════════════════════════════════════ */
+const SITES = [{"Title":"DataPOEM Data Vault","StorageUsedGB":1106.941,"QuotaGB":25600,"UsagePercent":4.3,"LastModified":"4/20/2026 11:14:38 AM","Status":"Active"},{"Title":"Datapoem_Data Management","StorageUsedGB":212.044,"QuotaGB":25600,"UsagePercent":0.8,"LastModified":"4/20/2026 6:46:32 AM","Status":"Active"},{"Title":"CS-Unilever","StorageUsedGB":94.107,"QuotaGB":25600,"UsagePercent":0.4,"LastModified":"4/20/2026 10:53:23 AM","Status":"Active"},{"Title":"CS-MARS","StorageUsedGB":79.254,"QuotaGB":25600,"UsagePercent":0.3,"LastModified":"4/20/2026 8:40:21 AM","Status":"Active"},{"Title":"Engineering team","StorageUsedGB":69.564,"QuotaGB":25600,"UsagePercent":0.3,"LastModified":"4/20/2026 10:37:22 AM","Status":"Active"},{"Title":"Business Team","StorageUsedGB":58.41,"QuotaGB":25600,"UsagePercent":0.2,"LastModified":"4/20/2026 9:32:19 AM","Status":"Active"},{"Title":"Product Team","StorageUsedGB":55.176,"QuotaGB":25600,"UsagePercent":0.2,"LastModified":"4/8/2026 8:21:58 AM","Status":"Active"},{"Title":"Automation Preprocessing","StorageUsedGB":26.034,"QuotaGB":25600,"UsagePercent":0.1,"LastModified":"4/19/2026 6:27:59 PM","Status":"Active"},{"Title":"Unilever","StorageUsedGB":19.765,"QuotaGB":25600,"UsagePercent":0.1,"LastModified":"4/18/2026 2:35:27 PM","Status":"Active"},{"Title":"DataPOEM SecureShare","StorageUsedGB":11.831,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/19/2026 6:27:48 PM","Status":"Active"},{"Title":"Business Insights Team","StorageUsedGB":9.521,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:22:57 PM","Status":"Active"},{"Title":"CS-Kraken","StorageUsedGB":6.424,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/16/2026 3:19:02 PM","Status":"Active"},{"Title":"DP - Data Champions","StorageUsedGB":6.283,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/17/2026 12:23:36 PM","Status":"Active"},{"Title":"AIMO Marketing Services LLP","StorageUsedGB":4.385,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 6:27:38 AM","Status":"Active"},{"Title":"CS-Magnum","StorageUsedGB":4.033,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 5:31:23 AM","Status":"Active"},{"Title":"CS-Kellanova","StorageUsedGB":3.278,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/19/2026 7:17:11 AM","Status":"Active"},{"Title":"Engineering team-Data Engg","StorageUsedGB":3.202,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/18/2026 6:21:42 PM","Status":"Active"},{"Title":"CS- Seventh Generation","StorageUsedGB":3.159,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 5:10:59 AM","Status":"Active"},{"Title":"CS-General","StorageUsedGB":2.916,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:02:33 PM","Status":"Active"},{"Title":"PC Important","StorageUsedGB":1.287,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:03:27 PM","Status":"Active"},{"Title":"Asia Specific Data Team","StorageUsedGB":1.09,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:36:34 PM","Status":"Active"},{"Title":"Engineering team-Engineering Admin","StorageUsedGB":1.081,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:22:56 PM","Status":"Active"},{"Title":"Omnicom","StorageUsedGB":1.062,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/19/2026 2:46:34 PM","Status":"Active"},{"Title":"Employee Information Portal","StorageUsedGB":1.032,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 6:51:51 AM","Status":"Active"},{"Title":"Data Prep Automation","StorageUsedGB":1.012,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:14:44 PM","Status":"Active"},{"Title":"Team DataPOEM","StorageUsedGB":0.827,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 10:01:59 AM","Status":"Active"},{"Title":"Data Discussions","StorageUsedGB":0.377,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/8/2026 8:22:02 AM","Status":"Active"},{"Title":"AI Agents","StorageUsedGB":0.373,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 10:01:59 AM","Status":"Active"},{"Title":"RJ & SP","StorageUsedGB":0.264,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:23:37 PM","Status":"Active"},{"Title":"AI Team Internal Files","StorageUsedGB":0.248,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/19/2026 6:52:36 PM","Status":"Active"},{"Title":"DataPOEM Innovation Vault","StorageUsedGB":0.191,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:35:58 PM","Status":"Active"},{"Title":"DBS","StorageUsedGB":0.166,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/15/2026 12:36:09 PM","Status":"Active"},{"Title":"Application Tracking System","StorageUsedGB":0.163,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/18/2026 6:42:46 PM","Status":"Active"},{"Title":"FE","StorageUsedGB":0.149,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:25:28 PM","Status":"Active"},{"Title":"CS- Suave","StorageUsedGB":0.094,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 4:32:33 AM","Status":"Active"},{"Title":"Mars Fight","StorageUsedGB":0.076,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 7:17:39 AM","Status":"Active"},{"Title":"Omnicom Media Group","StorageUsedGB":0.066,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/16/2026 10:52:28 AM","Status":"Active"},{"Title":"Hiring","StorageUsedGB":0.062,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:15:53 PM","Status":"Active"},{"Title":"Internal AI-B and W","StorageUsedGB":0.05,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:01:28 PM","Status":"Active"},{"Title":"UL PC","StorageUsedGB":0.042,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:16:12 PM","Status":"Active"},{"Title":"Marketing US","StorageUsedGB":0.035,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/19/2026 6:27:49 PM","Status":"Active"},{"Title":"Data","StorageUsedGB":0.03,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/9/2026 10:36:41 AM","Status":"Active"},{"Title":"DP Cultural Committee","StorageUsedGB":0.016,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/13/2026 6:38:15 AM","Status":"Active"},{"Title":"Information Technology","StorageUsedGB":0.014,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 8:18:53 AM","Status":"Active"},{"Title":"Employee Information","StorageUsedGB":0.013,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:01:52 PM","Status":"Active"},{"Title":"Engineering team-Documents","StorageUsedGB":0.008,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:05:15 PM","Status":"Active"},{"Title":"Understanding AI","StorageUsedGB":0.006,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/19/2026 6:26:29 PM","Status":"Active"},{"Title":"CS-Reckitt","StorageUsedGB":0.005,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/16/2026 5:33:14 AM","Status":"Active"},{"Title":"DP File Share","StorageUsedGB":0.005,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/8/2026 10:52:24 AM","Status":"Active"},{"Title":"Core Product Team","StorageUsedGB":0.003,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:03:56 PM","Status":"Active"},{"Title":"Connected Intelligence","StorageUsedGB":0.003,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/2/2026 5:35:17 AM","Status":"Active"},{"Title":"Engineering Jira Tracker","StorageUsedGB":0.003,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:16:00 PM","Status":"Active"},{"Title":"Communication site","StorageUsedGB":0.003,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 7:30:59 AM","Status":"Active"},{"Title":"Fount - Engg","StorageUsedGB":0.003,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 6:27:38 AM","Status":"Active"},{"Title":"FE + Testing","StorageUsedGB":0.002,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:03:37 PM","Status":"Active"},{"Title":"Apps","StorageUsedGB":0.002,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 6:37:58 AM","Status":"Active"},{"Title":"Internal AI","StorageUsedGB":0.002,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 10:01:59 AM","Status":"Active"},{"Title":"Recruitment@DataPOEM","StorageUsedGB":0.002,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/13/2026 6:38:15 AM","Status":"Active"},{"Title":"DataPOEM Marketing Leads","StorageUsedGB":0.002,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/18/2026 6:14:27 AM","Status":"Active"},{"Title":"DataPOEM WarRoom","StorageUsedGB":0.002,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:01:27 PM","Status":"Active"},{"Title":"Customer Success Excellence","StorageUsedGB":0.002,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/19/2026 6:26:31 PM","Status":"Active"},{"Title":"Timeline for ZEE ALM and PPS","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:35:57 PM","Status":"Active"},{"Title":"SCB","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:16:29 PM","Status":"Active"},{"Title":"Engineering Huddle Team","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:36:33 PM","Status":"Active"},{"Title":"Product Alerts","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/8/2026 8:22:03 AM","Status":"Active"},{"Title":"All Company","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:16:24 PM","Status":"Active"},{"Title":"Interview","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:16:15 PM","Status":"Active"},{"Title":"Deployment","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:36:05 PM","Status":"Active"},{"Title":"Domino's Timeline","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:16:31 PM","Status":"Active"},{"Title":"Twarit Planner","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/15/2026 2:58:10 PM","Status":"Active"},{"Title":"Kraken Project","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/15/2026 2:58:17 PM","Status":"Active"},{"Title":"Live chat requests","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 9:33:01 AM","Status":"Active"},{"Title":"team.web@datapoem.com","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:26:05 PM","Status":"Active"},{"Title":"NIC team","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:25:08 PM","Status":"Active"},{"Title":"Manager Error Tracker","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:23:42 PM","Status":"Active"},{"Title":"DP x MARS","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/10/2026 5:59:43 AM","Status":"Active"},{"Title":"Test (project Track)","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:23:57 PM","Status":"Active"},{"Title":"Team India","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 10:01:59 AM","Status":"Active"},{"Title":"Customer Success Team - US Region","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:24:15 PM","Status":"Active"},{"Title":"Sentry Error Tracker","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:25:33 PM","Status":"Active"},{"Title":"RnRcommittee@datapoem.com","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:24:15 PM","Status":"Active"},{"Title":"Data Ops","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/8/2026 8:22:06 AM","Status":"Active"},{"Title":"team.testing@datapoem.com","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:24:33 PM","Status":"Active"},{"Title":"Acko Insurance Timeline","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:35:57 PM","Status":"Active"},{"Title":"Brand_Test","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:25:11 PM","Status":"Active"},{"Title":"INC6_DEO_Dove","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:43:20 PM","Status":"Active"},{"Title":"DP Infra Alerts","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 6:27:38 AM","Status":"Active"},{"Title":"Zee Error Tracker","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:03:50 PM","Status":"Active"},{"Title":"MT/Dev servers","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:16:02 PM","Status":"Active"},{"Title":"Customer Vault","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:03:00 PM","Status":"Active"},{"Title":"APAC_DP_Team","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:02:57 PM","Status":"Active"},{"Title":"Brand","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:02:46 PM","Status":"Active"},{"Title":"Domino's core team","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/11/2026 2:35:01 PM","Status":"Active"},{"Title":"Website -DATAPOEM","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:02:31 PM","Status":"Active"},{"Title":"IT Change Board","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:02:15 PM","Status":"Active"},{"Title":"cs.testing","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/15/2026 12:36:09 PM","Status":"Active"},{"Title":"Engineering Tasks","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:01:45 PM","Status":"Active"},{"Title":"AI Tasks, Research, and Discussion","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:01:38 PM","Status":"Active"},{"Title":"DATA TEAM (INTERNAL)","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:01:37 PM","Status":"Active"},{"Title":"Test","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/20/2026 10:01:59 AM","Status":"Active"},{"Title":"spot mt servers","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/19/2026 6:29:28 PM","Status":"Active"},{"Title":"Time to value accelerator","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/19/2026 6:29:27 PM","Status":"Active"},{"Title":"Timelines","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/19/2026 6:28:05 PM","Status":"Active"},{"Title":"Data Team - Cloudservers","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/19/2026 6:28:04 PM","Status":"Active"},{"Title":"Get To Know - DataPoem","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/2/2026 5:35:41 AM","Status":"Active"},{"Title":"managers.India@datapoem.com","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/8/2026 8:21:57 AM","Status":"Active"},{"Title":"Growth@DataPOEM","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/19/2026 6:27:43 PM","Status":"Active"},{"Title":"Datapoem Error Tracker","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:16:01 PM","Status":"Active"},{"Title":"UL AI TimeLine","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:15:54 PM","Status":"Active"},{"Title":"Product Team General","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/8/2026 8:22:02 AM","Status":"Active"},{"Title":"DataPOEM_AI_research","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:15:18 PM","Status":"Active"},{"Title":"Brand Management","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:14:20 PM","Status":"Active"},{"Title":"TEST","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:14:16 PM","Status":"Active"},{"Title":"HR Recruitment","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:43:19 PM","Status":"Active"},{"Title":"Engineering_Dev_team","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:05:16 PM","Status":"Active"},{"Title":"ACKO","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/8/2026 8:22:00 AM","Status":"Active"},{"Title":"Weekly content plan","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:13:42 PM","Status":"Active"},{"Title":"Bajaj - ADHO","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/15/2026 12:36:09 PM","Status":"Active"},{"Title":"cs.support@datapoem.com","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/15/2026 2:58:10 PM","Status":"Active"},{"Title":"My Outlook","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:11:40 PM","Status":"Active"},{"Title":"Model Training Notifications","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:11:15 PM","Status":"Active"},{"Title":"Event","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:11:14 PM","Status":"Active"},{"Title":"exit","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/13/2026 6:38:15 AM","Status":"Active"},{"Title":"Connectors Error Tracker","StorageUsedGB":0.001,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/19/2026 6:28:03 PM","Status":"Active"},{"Title":"DataPOEM Platform Alerts-Green Alerts","StorageUsedGB":0.0,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/19/2026 6:27:55 PM","Status":"Active"},{"Title":"Engineering team-Fileshare -Approved","StorageUsedGB":0.0,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:36:26 PM","Status":"Active"},{"Title":"DataPOEM Platform Alerts-Production Alerts","StorageUsedGB":0.0,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"4/8/2026 8:21:56 AM","Status":"Active"},{"Title":"Internal AI-NIC","StorageUsedGB":0.0,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:02:46 PM","Status":"Active"},{"Title":"Internal AI-PC","StorageUsedGB":0.0,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:05:57 PM","Status":"Active"},{"Title":"DataPOEM Platform Alerts-Lamda Notifier","StorageUsedGB":0.0,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:23:38 PM","Status":"Active"},{"Title":"Engineering team-RnD","StorageUsedGB":0.0,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:27:42 PM","Status":"Active"},{"Title":"Internal AI-Indian Clients","StorageUsedGB":0.0,"QuotaGB":25600,"UsagePercent":0.0,"LastModified":"3/29/2026 7:16:23 PM","Status":"Active"}];
+
+const LIBS = [{"SiteTitle":"DataPOEM Data Vault","LibraryName":"UNILEVER","StorageMB":278244.01,"StorageGB":271.7227,"ItemCount":78612,"LastModified":"4/20/2026 11:16:08 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"MARS","StorageMB":55898.99,"StorageGB":54.5889,"ItemCount":9489,"LastModified":"4/20/2026 11:10:57 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"Omnicom Media Group","StorageMB":31913.35,"StorageGB":31.1654,"ItemCount":1497,"LastModified":"4/20/2026 5:28:03 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"NIELSEN","StorageMB":19962.69,"StorageGB":19.4948,"ItemCount":514,"LastModified":"4/20/2026 8:48:22 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"Unilever Archive","StorageMB":19788.36,"StorageGB":19.3246,"ItemCount":20174,"LastModified":"4/20/2026 6:16:35 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"Kellanova","StorageMB":7071.88,"StorageGB":6.9061,"ItemCount":733,"LastModified":"4/20/2026 11:01:17 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"MAGNUM","StorageMB":4438.49,"StorageGB":4.3345,"ItemCount":7465,"LastModified":"4/20/2026 8:35:59 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"Reckitt","StorageMB":2022.69,"StorageGB":1.9753,"ItemCount":319,"LastModified":"4/20/2026 11:02:04 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"KRAKEN","StorageMB":1822.37,"StorageGB":1.7797,"ItemCount":802,"LastModified":"4/20/2026 9:04:10 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"Santoor","StorageMB":623.06,"StorageGB":0.6085,"ItemCount":66,"LastModified":"4/20/2026 9:04:46 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"Seventh Generation","StorageMB":462.47,"StorageGB":0.4516,"ItemCount":129,"LastModified":"4/20/2026 9:04:47 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"Bharat Matrimony","StorageMB":443.78,"StorageGB":0.4334,"ItemCount":40,"LastModified":"4/20/2026 9:03:59 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"ZEE","StorageMB":148.53,"StorageGB":0.145,"ItemCount":36,"LastModified":"4/20/2026 9:06:28 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"KANTAR","StorageMB":126.8,"StorageGB":0.1238,"ItemCount":39,"LastModified":"4/20/2026 9:04:07 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"Historical Records","StorageMB":29.07,"StorageGB":0.0284,"ItemCount":4542,"LastModified":"4/20/2026 9:04:03 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"Volkswagen","StorageMB":16.9,"StorageGB":0.0165,"ItemCount":20,"LastModified":"4/20/2026 9:06:26 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"Style Library","StorageMB":6.64,"StorageGB":0.0065,"ItemCount":616,"LastModified":"2/22/2024 7:08:08 PM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"PLIX","StorageMB":3.12,"StorageGB":0.003,"ItemCount":24,"LastModified":"4/20/2026 9:04:42 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"CS Live Workflow","StorageMB":0.54,"StorageGB":0.0005,"ItemCount":4,"LastModified":"4/20/2026 9:04:00 AM"},{"SiteTitle":"DataPOEM Data Vault","LibraryName":"Site Assets","StorageMB":0.54,"StorageGB":0.0005,"ItemCount":16,"LastModified":"4/20/2026 6:12:18 AM"},{"SiteTitle":"CS-Unilever","LibraryName":"Unilever External Files","StorageMB":93102.84,"StorageGB":90.9207,"ItemCount":3315,"LastModified":"4/20/2026 10:53:20 AM"},{"SiteTitle":"Engineering team","LibraryName":"Documents","StorageMB":68184.64,"StorageGB":66.5866,"ItemCount":3347,"LastModified":"4/18/2026 5:26:52 PM"},{"SiteTitle":"Engineering team","LibraryName":"testing","StorageMB":63.16,"StorageGB":0.0617,"ItemCount":8,"LastModified":"4/17/2026 5:31:19 AM"},{"SiteTitle":"Unilever","LibraryName":"Documents","StorageMB":20134.57,"StorageGB":19.6627,"ItemCount":191,"LastModified":"4/18/2026 2:35:28 PM"},{"SiteTitle":"AIMO Marketing Services LLP","LibraryName":"Documents","StorageMB":4208.08,"StorageGB":4.1095,"ItemCount":283,"LastModified":"4/20/2026 5:05:30 AM"},{"SiteTitle":"CS-Magnum","LibraryName":"Documents","StorageMB":3534.97,"StorageGB":3.4521,"ItemCount":44,"LastModified":"4/20/2026 5:31:21 AM"},{"SiteTitle":"CS- Seventh Generation","LibraryName":"Documents","StorageMB":2865.25,"StorageGB":2.7981,"ItemCount":31,"LastModified":"4/20/2026 5:07:21 AM"},{"SiteTitle":"Omnicom","LibraryName":"Documents","StorageMB":415.55,"StorageGB":0.4058,"ItemCount":4012,"LastModified":"4/16/2026 6:37:16 PM"}];
+
+/* ═══════════ RENDER ═══════════ */
+
+const COLORS = ['#2563eb','#7c3aed','#0891b2','#059669','#d97706','#db2777','#6366f1','#0e7490','#15803d','#9333ea'];
+const FILLS  = ['c1','c2','c3','c4','c5','c6','c1','c2','c3','c4'];
+const totalGB = 1786.27;
+const maxGB   = SITES[0].StorageUsedGB;
+
+/* ── Top 15 bars ── */
+const barsEl = document.getElementById('topBars');
+SITES.slice(0, 15).forEach((s, i) => {
+  const pct    = (s.StorageUsedGB / maxGB * 100).toFixed(1);
+  const gbText = s.StorageUsedGB >= 1 ? s.StorageUsedGB.toFixed(1) + ' GB' : (s.StorageUsedGB * 1024).toFixed(0) + ' MB';
+  const hasLib = LIBS.some(l => l.SiteTitle === s.Title);
+  barsEl.innerHTML += `
+    <div class="site-row" onclick="openModal(${i})" title="Click to see folders inside this site">
+      <span class="site-rank">${i+1}</span>
+      <span class="site-name" title="${s.Title}">${s.Title || '(Unnamed)'}</span>
+      <div class="site-bar-wrap">
+        <div class="bar-track"><div class="bar-fill ${FILLS[i % FILLS.length]}" style="width:${pct}%"></div></div>
+      </div>
+      <span class="site-gb">${gbText}</span>
+      ${hasLib ? '<span class="site-tag">📂 libs</span>' : '<span class="site-tag" style="opacity:0.3">—</span>'}
+    </div>`;
+});
+
+/* ── Donut ── */
+(function(){
+  const top6   = SITES.slice(0,6);
+  const otherGB= totalGB - top6.reduce((a,s)=>a+s.StorageUsedGB,0);
+  const segs   = [...top6.map(s=>({label:s.Title, val:s.StorageUsedGB})), {label:'All Other Sites', val:otherGB}];
+  const CX=100, CY=100, R=75, IR=50;
+  let angle = -Math.PI/2;
+  let paths = '';
+  segs.forEach((seg,i)=>{
+    const sw = (seg.val/totalGB)*2*Math.PI;
+    const x1=CX+R*Math.cos(angle),  y1=CY+R*Math.sin(angle);
+    const x2=CX+R*Math.cos(angle+sw),y2=CY+R*Math.sin(angle+sw);
+    const ix1=CX+IR*Math.cos(angle), iy1=CY+IR*Math.sin(angle);
+    const ix2=CX+IR*Math.cos(angle+sw),iy2=CY+IR*Math.sin(angle+sw);
+    const lg = sw>Math.PI?1:0;
+    paths += `<path d="M${ix1},${iy1} L${x1},${y1} A${R},${R},0,${lg},1,${x2},${y2} L${ix2},${iy2} A${IR},${IR},0,${lg},0,${ix1},${iy1}" fill="${COLORS[i]}" opacity="0.9"/>`;
+    angle += sw;
+  });
+  document.getElementById('donutSvg').innerHTML = paths +
+    `<text x="100" y="96" text-anchor="middle" fill="#fff" font-size="17" font-weight="900" font-family="Nunito,sans-serif">1,786</text>
+     <text x="100" y="110" text-anchor="middle" fill="#64748b" font-size="8.5" font-family="Nunito Sans,sans-serif">TOTAL GB</text>`;
+  const legEl = document.getElementById('donutLegend');
+  segs.forEach((s,i)=>{
+    const pct = (s.val/totalGB*100).toFixed(1);
+    legEl.innerHTML += `<div class="legend-item">
+      <div class="legend-left"><span class="legend-dot" style="background:${COLORS[i]}"></span><span class="legend-name" title="${s.label}">${s.label}</span></div>
+      <span class="legend-val">${s.val.toFixed(1)} GB · ${pct}%</span>
+    </div>`;
+  });
+})();
+
+/* ── Full table ── */
+const tbody = document.getElementById('tableBody');
+SITES.forEach((s,i) => {
+  const gb = s.StorageUsedGB >= 1
+    ? s.StorageUsedGB.toFixed(2) + ' GB'
+    : s.StorageUsedGB > 0 ? (s.StorageUsedGB*1024).toFixed(0) + ' MB' : '< 1 MB';
+  const pctCls = s.UsagePercent>=90?'p-red':s.UsagePercent>=50?'p-orange':s.UsagePercent>0?'p-blue':'p-green';
+  const pctTxt = s.UsagePercent > 0 ? s.UsagePercent.toFixed(1)+'%' : '< 0.1%';
+  const hasLib = LIBS.some(l => l.SiteTitle === s.Title);
+  tbody.innerHTML += `<tr onclick="openModal(${i})" title="Click to see folders inside this site">
+    <td class="muted num" style="font-size:0.7rem">${i+1}</td>
+    <td style="font-weight:600;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+      ${s.Title || '(Unnamed)'}${hasLib?' <span style="font-size:0.6rem;color:#3b82f6">📂</span>':''}
+    </td>
+    <td class="num" style="text-align:right">${gb}</td>
+    <td style="text-align:right"><span class="pill ${pctCls}">${pctTxt}</span></td>
+    <td class="muted" style="font-size:0.73rem">${s.LastModified}</td>
+    <td><span class="pill p-green">${s.Status}</span></td>
+  </tr>`;
+});
+
+function filterTable(){
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  document.querySelectorAll('#tableBody tr').forEach(r=>{
+    r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+/* ── Modal ── */
+function openModal(idx){
+  const s    = SITES[idx];
+  const libs = LIBS.filter(l=>l.SiteTitle===s.Title).sort((a,b)=>b.StorageGB-a.StorageGB);
+  const maxL = libs.length ? Math.max(...libs.map(l=>l.StorageGB)) : 1;
+
+  document.getElementById('mTitle').textContent = '📁 ' + (s.Title||'(Unnamed)');
+  document.getElementById('mStat').textContent  =
+    `Total size: ${s.StorageUsedGB >= 1 ? s.StorageUsedGB.toFixed(2)+' GB' : (s.StorageUsedGB*1024).toFixed(0)+' MB'}  ·  Quota usage: ${s.UsagePercent > 0 ? s.UsagePercent.toFixed(1)+'%' : 'Less than 0.1%'}  ·  Last updated: ${s.LastModified}`;
+
+  const body = document.getElementById('mBody');
+
+  if(!libs.length){
+    body.innerHTML = `<div class="modal-explain">
+      <strong>ℹ️ No folder-level data for this site.</strong><br>
+      Library breakdown was only collected for the top storage sites. This site uses <strong>${s.StorageUsedGB >= 1 ? s.StorageUsedGB.toFixed(2)+' GB' : (s.StorageUsedGB*1024).toFixed(0)+' MB'}</strong> of storage.
+    </div>
+    <div class="no-libs">📭 No library data available for this site</div>`;
+  } else {
+    const totalLibGB = libs.reduce((a,l)=>a+l.StorageGB, 0);
+    const totalItems = libs.reduce((a,l)=>a+(l.ItemCount||0), 0);
+
+    let bullets = '';
+    libs.filter(l=>l.StorageGB>=0.5).forEach(l=>{
+      bullets += `<li>● The <strong>"${l.LibraryName}"</strong> folder holds <strong>${l.StorageGB.toFixed(1)} GB</strong> across ${(l.ItemCount||0).toLocaleString()} files</li>`;
+    });
+
+    body.innerHTML = `
+      <div class="modal-explain">
+        <strong>What is a Library?</strong> A library is like a folder inside a SharePoint site. Below you can see each folder's name, how much space it's taking, and how many files are inside it.
+        This site has <strong>${libs.length} folders</strong> using a combined <strong>${totalLibGB.toFixed(1)} GB</strong> with <strong>${totalItems.toLocaleString()} total files</strong>.
+      </div>
+      <div style="background:#0f172a;border-radius:10px;padding:0.85rem 1.1rem;margin-bottom:1.2rem">
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.3rem;font-size:0.81rem;color:#94a3b8;line-height:1.6">${bullets || '<li>● All folders are under 0.5 GB</li>'}</ul>
+      </div>
+      <div class="lib-row-head">
+        <span>Folder (Library) Name</span><span>Space Used</span><span style="text-align:right">Size in GB</span><span style="text-align:right">Files Count</span>
+      </div>
+      ${libs.map(l=>{
+        const pct  = (l.StorageGB/maxL*100).toFixed(1);
+        const size = l.StorageGB >= 1 ? l.StorageGB.toFixed(2)+' GB' : l.StorageMB.toFixed(0)+' MB';
+        return `<div class="lib-row">
+          <div class="lib-name">📂 ${l.LibraryName}</div>
+          <div class="lib-bar-outer">
+            <div class="lib-bar-track"><div class="lib-bar-fill" style="width:${pct}%"></div></div>
+          </div>
+          <div class="lib-gb">${size}</div>
+          <div class="lib-count">${(l.ItemCount||0).toLocaleString()} files</div>
+        </div>`;
+      }).join('')}`;
+  }
+  document.getElementById('overlay').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.remove('open');
+}
+document.getElementById('overlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+</script>
+</body>
+</html>
